@@ -1,4 +1,4 @@
-﻿import './Skeleton.css'
+import './Skeleton.css'
 
 interface SkeletonProps {
   variant: 'title' | 'text' | 'code' | 'card' | 'circle' | 'rect'

@@ -1,5 +1,0 @@
-# Cloudflare Pages SPA fallback
-# All paths serve index.html (except assets, data files, etc.)
-# https://developers.cloudflare.com/pages/configuration/serving-pages/#404-handling
-
-/*    /index.html   200
