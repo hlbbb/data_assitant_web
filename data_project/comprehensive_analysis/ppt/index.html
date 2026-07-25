@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="arctic-cool">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>跨境电商数据驱动增长全案诊断报告</title>
+<link rel="stylesheet" href="../../../.claude/skills/html-ppt/assets/fonts.css">
+<link rel="stylesheet" href="../../../.claude/skills/html-ppt/assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../../../.claude/skills/html-ppt/assets/themes/arctic-cool.css">
+<link rel="stylesheet" href="../../../.claude/skills/html-ppt/assets/animations/animations.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+/* Deck-scoped styles */
+.chart-img{width:100%;border-radius:var(--radius);box-shadow:var(--shadow);background:var(--surface)}
+.chart-card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.chart-card img{width:100%;border-radius:var(--radius-sm)}
+.t{width:100%;border-collapse:collapse;font-size:15px}
+.t th,.t td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.t th{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+.t tr:hover td{background:var(--surface-2)}
+.t td.num{font-variant-numeric:tabular-nums;text-align:right}
+.up{color:var(--good)}.dn{color:var(--bad)}
+.pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.pill-row .pill{font-size:13px;padding:6px 16px;border-radius:999px;background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+.pill-row .pill.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.insight{background:var(--grad-soft);border-left:4px solid var(--accent);padding:16px 20px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin-top:16px;font-size:15px;color:var(--text-2)}
+.tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600}
+.tag-p0{background:#e8f5e9;color:#2e7d32}.tag-p1{background:#fff3e0;color:#e65100}.tag-p2{background:#e3f2fd;color:#1565c0}
+</style>
+</head>
+<body data-themes="arctic-cool,corporate-clean,engineering-whiteprint,minimal-white,blueprint,nord" data-theme-base="../../../.claude/skills/html-ppt/assets/themes/">
+<div class="deck">
+
+<!-- ==================== SLIDE 01: COVER ==================== -->
+<section class="slide" data-title="封面">
+  <div class="deck-header"><span class="eyebrow">Data Analytics · 2023–2024</span><span class="eyebrow">DMAIC + 多模型融合</span></div>
+  <div class="anim-stagger-list">
+    <p class="kicker">跨境电商 · 全案诊断</p>
+    <h1 class="h1 anim-fade-up" data-anim="fade-up">
+      数据驱动<span class="gradient-text">增长</span><br>诊断报告
+    </h1>
+    <p class="lede">8,000 用户 · 55,203 订单 · 1,130.64 万元 · 5 个国家 · 5 个品类</p>
+    <div class="pill-row">
+      <span class="pill accent">DMAIC</span>
+      <span class="pill">AARRR</span>
+      <span class="pill">RFM</span>
+      <span class="pill">LTV/CAC</span>
+      <span class="pill">同期群</span>
+      <span class="pill">NPS</span>
+    </div>
+  </div>
+  <div class="deck-footer"><span class="dim2">公司A · 东南亚跨境电商</span><span class="slide-number" data-current="1" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 02: TOC ==================== -->
+<section class="slide" data-title="目录">
+  <p class="kicker">Agenda · 报告结构</p>
+  <h2 class="h2">五大分析维度</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><h4>01 · 全局KPI</h4><p class="dim">核心指标仪表盘、月度趋势、健康度判断</p></div>
+    <div class="card"><h4>02 · 增长漏斗</h4><p class="dim">AARRR 全链路转化、获客成本、瓶颈定位</p></div>
+    <div class="card"><h4>03 · 用户价值</h4><p class="dim">RFM 八层分群、帕累托效应、收入集中度</p></div>
+    <div class="card"><h4>04 · 渠道ROI</h4><p class="dim">LTV/CAC 分析、四象限定位、回报周期</p></div>
+    <div class="card"><h4>05 · 留存与市场</h4><p class="dim">同期群留存、分国家对比、品类复购</p></div>
+    <div class="card card-accent"><h4>06 · 策略路线图</h4><p class="dim">核心发现、资源优化、30/90/180 天行动</p></div>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="2" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 03: SECTION - 全局KPI ==================== -->
+<section class="slide center tc" data-title="Section 01">
+  <div style="max-width:780px;margin:0 auto">
+    <p class="kicker anim-fade-down" data-anim="fade-down">Section · 01</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:96px">全局 <span class="gradient-text">KPI</span> 仪表盘</h1>
+    <div class="divider-accent" style="margin:24px auto"></div>
+    <p class="lede" style="margin:0 auto">总览平台核心指标，评估整体运营健康度</p>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="3" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 04: KPI GRID ==================== -->
+<section class="slide" data-title="核心KPI">
+  <p class="kicker">Metrics · 核心指标汇总</p>
+  <h2 class="h2">24 个月运营全景</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card">
+      <p class="eyebrow">总注册用户</p>
+      <div style="font-size:52px;font-weight:800"><span class="counter" data-to="8000">0</span></div>
+      <p class="dim">活跃率 100%</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">总订单数</p>
+      <div style="font-size:52px;font-weight:800"><span class="counter" data-to="55203">0</span></div>
+      <p class="dim" style="color:var(--good)">↑ 持续增长</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">总收入</p>
+      <div style="font-size:52px;font-weight:800"><span class="counter" data-to="1130">0</span><span style="font-size:28px">万</span></div>
+      <p class="dim" style="color:var(--good)">↑ 稳步上升</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">复购率</p>
+      <div style="font-size:52px;font-weight:800"><span class="counter" data-to="87">0</span><span style="font-size:28px">.6%</span></div>
+      <p class="dim" style="color:var(--good)">↑ 优秀水平</p>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <div class="grid g2" style="gap:16px">
+      <div class="card" style="padding:16px 20px">
+        <span class="dim2">平均客单价</span>
+        <span style="float:right;font-weight:700;font-size:20px">204.82 元</span>
+      </div>
+      <div class="card" style="padding:16px 20px">
+        <span class="dim2">覆盖市场</span>
+        <span style="float:right;font-weight:700;font-size:20px">5 国 · 5 品类</span>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="4" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 05: KPI DASHBOARD CHART ==================== -->
+<section class="slide" data-title="KPI仪表盘">
+  <p class="kicker">Dashboard · KPI 可视化</p>
+  <h2 class="h2">综合 KPI 仪表盘</h2>
+  <div class="chart-card mt-l anim-fade-up" data-anim="fade-up">
+    <img src="../charts/18_kpi_dashboard.png" alt="KPI仪表盘">
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="5" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 06: MONTHLY TREND ==================== -->
+<section class="slide" data-title="月度趋势">
+  <p class="kicker">Trend · 月度趋势</p>
+  <h2 class="h2">GMV 与用户增长走势</h2>
+  <div class="chart-card mt-l anim-fade-up" data-anim="fade-up">
+    <img src="../charts/02_monthly_gmv_trend.png" alt="月度GMV趋势">
+  </div>
+  <div class="insight">平台整体处于「成长期」，用户规模与收入呈上升趋势。月度 GMV 持续攀升，用户增长健康。</div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="6" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 07: SECTION - AARRR ==================== -->
+<section class="slide center tc" data-title="Section 02">
+  <div style="max-width:780px;margin:0 auto">
+    <p class="kicker anim-fade-down" data-anim="fade-down">Section · 02</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:96px">AARRR <span class="gradient-text">增长漏斗</span></h1>
+    <div class="divider-accent" style="margin:24px auto"></div>
+    <p class="lede" style="margin:0 auto">全链路转化分析，精准定位增长瓶颈</p>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="7" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 08: AARRR FUNNEL ==================== -->
+<section class="slide" data-title="转化漏斗">
+  <p class="kicker">Funnel · 全链路转化</p>
+  <h2 class="h2">AARRR 漏斗全景</h2>
+  <div class="grid g2 mt-l" style="align-items:center">
+    <div class="chart-card anim-fade-left" data-anim="fade-left">
+      <img src="../charts/01_full_funnel.png" alt="AARRR漏斗">
+    </div>
+    <div class="anim-fade-right" data-anim="fade-right">
+      <div class="card" style="margin-bottom:14px">
+        <h4>增长瓶颈定位</h4>
+        <ul class="dim" style="line-height:2">
+          <li>注册→浏览转化率偏低，需优化新用户引导</li>
+          <li>加购→购买是关键断点，需优化结算体验</li>
+          <li>付费广告获客成本高，自然搜索流量有限</li>
+        </ul>
+      </div>
+      <div class="insight">优化新用户首购转化，是当前增长的最大杠杆点。</div>
+    </div>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="8" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 09: ACQUISITION COST ==================== -->
+<section class="slide" data-title="获客成本">
+  <p class="kicker">CAC · 获客成本趋势</p>
+  <h2 class="h2">月度获客与成本走势</h2>
+  <div class="chart-card mt-l anim-fade-up" data-anim="fade-up">
+    <img src="../charts/15_acquisition_trend.png" alt="获客成本趋势">
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="9" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 10: SECTION - RFM ==================== -->
+<section class="slide center tc" data-title="Section 03">
+  <div style="max-width:780px;margin:0 auto">
+    <p class="kicker anim-fade-down" data-anim="fade-down">Section · 03</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:96px">RFM <span class="gradient-text">用户分层</span></h1>
+    <div class="divider-accent" style="margin:24px auto"></div>
+    <p class="lede" style="margin:0 auto">八类用户价值分群，帕累托效应验证</p>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="10" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 11: RFM SEGMENT ==================== -->
+<section class="slide" data-title="RFM分层">
+  <p class="kicker">Segment · 八类用户分层</p>
+  <h2 class="h2">RFM 用户价值画像</h2>
+  <div class="grid g2 mt-l" style="align-items:center">
+    <div class="chart-card anim-fade-left" data-anim="fade-left">
+      <img src="../charts/04_rfm_segment_pie.png" alt="RFM分层">
+    </div>
+    <div class="anim-fade-right" data-anim="fade-right">
+      <div class="card" style="margin-bottom:14px">
+        <h4>分层策略</h4>
+        <ul class="dim" style="line-height:2">
+          <li><b>重要价值用户</b> — VIP 专属权益，维护忠诚度</li>
+          <li><b>重要发展用户</b> — 提升消费频次，交叉销售</li>
+          <li><b>重要保持用户</b> — 召回激活，限时优惠</li>
+          <li><b>重要挽留用户</b> — 流失预警，个性化挽留</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="11" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 12: PARETO ==================== -->
+<section class="slide" data-title="帕累托效应">
+  <p class="kicker">Pareto · 收入集中度</p>
+  <h2 class="h2">帕累托效应验证</h2>
+  <div class="chart-card mt-l anim-fade-up" data-anim="fade-up">
+    <img src="../charts/05_rfm_pareto.png" alt="帕累托图">
+  </div>
+  <div class="insight"><b>核心发现：</b>20% 的高价值用户贡献了超过 60% 的收入，符合二八法则。高价值用户维护是收入增长的关键杠杆。</div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="12" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 13: SECTION - LTV/CAC ==================== -->
+<section class="slide center tc" data-title="Section 04">
+  <div style="max-width:780px;margin:0 auto">
+    <p class="kicker anim-fade-down" data-anim="fade-down">Section · 04</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:96px">LTV/CAC <span class="gradient-text">渠道 ROI</span></h1>
+    <div class="divider-accent" style="margin:24px auto"></div>
+    <p class="lede" style="margin:0 auto">渠道效率四象限，精准配置营销资源</p>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="13" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 14: LTV/CAC TABLE ==================== -->
+<section class="slide" data-title="渠道ROI">
+  <p class="kicker">ROI · 分渠道效率对比</p>
+  <h2 class="h2">五大渠道 LTV / CAC 全景</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+    <table class="t">
+      <thead><tr><th>渠道</th><th class="num">LTV (元)</th><th class="num">CAC (元)</th><th class="num">ROI</th><th>评级</th></tr></thead>
+      <tbody>
+        <tr><td><b>自然搜索</b></td><td class="num">1,433.82</td><td class="num">8.00</td><td class="num up">179.23</td><td><span class="tag tag-p0">最优</span></td></tr>
+        <tr><td><b>内容营销</b></td><td class="num">1,277.81</td><td class="num">18.00</td><td class="num up">70.99</td><td><span class="tag tag-p0">优秀</span></td></tr>
+        <tr><td><b>KOL推荐</b></td><td class="num">1,354.93</td><td class="num">22.00</td><td class="num up">61.59</td><td><span class="tag tag-p1">良好</span></td></tr>
+        <tr><td><b>社交媒体</b></td><td class="num">1,475.79</td><td class="num">35.00</td><td class="num">42.17</td><td><span class="tag tag-p1">合格</span></td></tr>
+        <tr><td><b>付费广告</b></td><td class="num">1,443.66</td><td class="num">45.00</td><td class="num">32.08</td><td><span class="tag tag-p2">待优化</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="insight">自然搜索 ROI 高达 179x，是最值得加码的渠道。付费广告 ROI 最低，需优化投放策略或考虑转移预算。</div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="14" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 15: CHANNEL QUADRANT ==================== -->
+<section class="slide" data-title="渠道四象限">
+  <p class="kicker">Quadrant · 渠道效率矩阵</p>
+  <h2 class="h2">渠道定位四象限</h2>
+  <div class="chart-card mt-l anim-fade-up" data-anim="fade-up">
+    <img src="../charts/06_channel_ltv_cac.png" alt="渠道四象限">
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="15" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 16: SECTION - RETENTION ==================== -->
+<section class="slide center tc" data-title="Section 05">
+  <div style="max-width:780px;margin:0 auto">
+    <p class="kicker anim-fade-down" data-anim="fade-down">Section · 05</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:96px">留存与 <span class="gradient-text">市场分析</span></h1>
+    <div class="divider-accent" style="margin:24px auto"></div>
+    <p class="lede" style="margin:0 auto">同期群留存、分国家对比、品类与复购深度洞察</p>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="16" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 17: COHORT RETENTION ==================== -->
+<section class="slide" data-title="同期群留存">
+  <p class="kicker">Cohort · 留存热力图</p>
+  <h2 class="h2">同期群留存衰减趋势</h2>
+  <div class="chart-card mt-l anim-fade-up" data-anim="fade-up">
+    <img src="../charts/07_cohort_retention_heatmap.png" alt="留存热力图">
+  </div>
+  <div class="insight"><b>关键问题：</b>M3 留存率降至 30% 以下，需强化 60-90 天召回机制。前三个月是留存黄金窗口。</div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="17" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 18: COUNTRY & CATEGORY ==================== -->
+<section class="slide" data-title="国家与品类">
+  <p class="kicker">Market · 五国市场对比</p>
+  <h2 class="h2">分国家 KPI 雷达图</h2>
+  <div class="grid g2 mt-l" style="align-items:center">
+    <div class="chart-card anim-fade-left" data-anim="fade-left">
+      <img src="../charts/03_country_radar.png" alt="国家雷达图">
+    </div>
+    <div class="anim-fade-right" data-anim="fade-right">
+      <div class="card">
+        <h4>市场成熟度评估</h4>
+        <table class="t" style="font-size:13px">
+          <thead><tr><th>国家</th><th>成熟度</th><th>策略</th></tr></thead>
+          <tbody>
+            <tr><td>🇹🇭 泰国</td><td><span class="tag tag-p0">成熟</span></td><td>深耕高价值</td></tr>
+            <tr><td>🇻🇳 越南</td><td><span class="tag tag-p1">成长</span></td><td>扩大规模</td></tr>
+            <tr><td>🇮🇩 印尼</td><td><span class="tag tag-p1">成长</span></td><td>品类拓展</td></tr>
+            <tr><td>🇵🇭 菲律宾</td><td><span class="tag tag-p2">新兴</span></td><td>基础建设</td></tr>
+            <tr><td>🇲🇾 马来西亚</td><td><span class="tag tag-p0">成熟</span></td><td>精细化运营</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="18" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 19: STRATEGY ROADMAP ==================== -->
+<section class="slide" data-title="策略路线图">
+  <p class="kicker">Strategy · 核心发现与行动</p>
+  <h2 class="h2">增长路线图</h2>
+  <div class="grid g2 mt-l" style="gap:18px">
+    <div class="anim-fade-left" data-anim="fade-left">
+      <div class="card" style="margin-bottom:14px">
+        <h4>四大核心发现</h4>
+        <ul class="dim" style="line-height:2;font-size:14px">
+          <li><b>增长瓶颈</b> — 付费广告获客成本高，自然流量不足</li>
+          <li><b>价值集中</b> — 20% 用户贡献 60%+ 收入</li>
+          <li><b>留存衰减</b> — M3 留存率降至 30% 以下</li>
+          <li><b>市场差异</b> — 五国发展不均衡</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>资源配置建议</h4>
+        <table class="t" style="font-size:13px">
+          <thead><tr><th>优先级</th><th>渠道</th><th>国家</th><th class="num">预算</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-p0">P0</span></td><td>自然搜索</td><td>泰国</td><td class="num">30%</td></tr>
+            <tr><td><span class="tag tag-p0">P0</span></td><td>KOL推荐</td><td>印尼</td><td class="num">25%</td></tr>
+            <tr><td><span class="tag tag-p1">P1</span></td><td>付费广告</td><td>越南</td><td class="num">20%</td></tr>
+            <tr><td><span class="tag tag-p1">P1</span></td><td>内容营销</td><td>马来西亚</td><td class="num">15%</td></tr>
+            <tr><td><span class="tag tag-p2">P2</span></td><td>社交媒体</td><td>菲律宾</td><td class="num">10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="anim-fade-right" data-anim="fade-right">
+      <div class="card card-accent" style="margin-bottom:14px">
+        <h4>30/90/180 天行动计划</h4>
+        <div style="border-left:3px solid var(--accent);padding-left:16px;margin-top:12px">
+          <p style="margin-bottom:12px"><span class="tag tag-p0">30天</span></p>
+          <p class="dim" style="font-size:14px">优化关键转化环节<br>启动高价值用户维护<br>建立数据监控看板</p>
+        </div>
+        <div style="border-left:3px solid var(--warn);padding-left:16px;margin-top:16px">
+          <p style="margin-bottom:12px"><span class="tag tag-p1">90天</span></p>
+          <p class="dim" style="font-size:14px">渠道 ROI 优化迭代<br>流失用户召回计划<br>分国家差异化策略</p>
+        </div>
+        <div style="border-left:3px solid var(--accent-2);padding-left:16px;margin-top:16px">
+          <p style="margin-bottom:12px"><span class="tag tag-p2">180天</span></p>
+          <p class="dim" style="font-size:14px">跨国差异化运营体系落地<br>自动化营销系统上线<br>目标：月度 GMV 环比 +15%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="19" data-total="20"></span></div>
+</section>
+
+<!-- ==================== SLIDE 20: THANKS ==================== -->
+<section class="slide center tc" data-title="Thanks">
+  <div>
+    <p class="kicker">End · 报告完毕</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:120px">
+      <span class="gradient-text">Thank You</span>
+    </h1>
+    <p class="lede" style="margin:20px auto 0;max-width:50ch">数据驱动决策，增长有迹可循。期待与团队共创下一阶段增长。</p>
+    <div class="pill-row" style="justify-content:center;margin-top:24px">
+      <span class="pill accent">DMAIC</span>
+      <span class="pill">AARRR</span>
+      <span class="pill">RFM</span>
+      <span class="pill">LTV/CAC</span>
+      <span class="pill">同期群</span>
+      <span class="pill">NPS</span>
+    </div>
+    <p class="dim2" style="margin-top:40px;font-size:14px">公司A · 东南亚跨境电商 · 2023-2024<br>分析框架: DMAIC + 多模型融合</p>
+  </div>
+  <div class="deck-footer"><span class="dim2">跨境电商数据诊断</span><span class="slide-number" data-current="20" data-total="20"></span></div>
+</section>
+
+</div>
+<script src="../../../.claude/skills/html-ppt/assets/runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="aurora">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RFM 用户价值分层分析报告</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" id="theme-link" href="assets/themes/aurora.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+  /* Segment color palette */
+  :root {
+    --seg-vip: #FF4B4B;
+    --seg-grow: #FF8C42;
+    --seg-keep: #FFB347;
+    --seg-hold: #FFD700;
+    --seg-val: #87CEEB;
+    --seg-dev: #98D8C8;
+    --seg-maint: #B0C4DE;
+    --seg-low: #D3D3D3;
+  }
+  /* Custom data table */
+  .dt{width:100%;border-collapse:collapse;font-size:14px}
+  .dt th,.dt td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+  .dt th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+  .dt tr:hover td{background:var(--surface-2)}
+  .dt td.num{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+  .dt .highlight td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  /* Segment badge */
+  .seg-badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:600;color:#fff}
+  /* Image chart container */
+  .chart-img{width:100%;border-radius:var(--radius);box-shadow:var(--shadow);background:var(--surface)}
+  /* Funnel bar */
+  .funnel-bar{border-radius:var(--radius-sm);padding:12px 20px;color:#fff;font-weight:700;text-align:center;transition:transform .3s var(--ease)}
+  .funnel-bar:hover{transform:scale(1.02)}
+  /* Strategy card */
+  .strat-card{padding:20px 22px;border-radius:var(--radius);border-left:4px solid var(--accent)}
+  /* KPI mini */
+  .kpi-mini{text-align:center}
+  .kpi-mini .val{font-size:48px;font-weight:800;line-height:1.1}
+  .kpi-mini .label{font-size:13px;color:var(--text-3);margin-top:4px}
+  /* Priority matrix */
+  .matrix-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .matrix-cell{padding:20px;border-radius:var(--radius);text-align:center}
+  .matrix-cell.urgent{background:color-mix(in srgb,var(--bad) 12%,transparent);border:1px solid color-mix(in srgb,var(--bad) 30%,transparent)}
+  .matrix-cell.important{background:color-mix(in srgb,var(--warn) 12%,transparent);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+  .matrix-cell.routine{background:color-mix(in srgb,var(--good) 10%,transparent);border:1px solid color-mix(in srgb,var(--good) 25%,transparent)}
+  .matrix-cell.monitor{background:var(--surface-2);border:1px solid var(--border)}
+</style>
+</head>
+<body data-themes="aurora,corporate-clean,academic-paper,minimal-white,tokyo-night,blueprint,editorial-serif,nord" data-theme-base="assets/themes/">
+<div class="deck">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <section class="slide" data-title="封面">
+    <div class="deck-header"><span class="eyebrow">Data Analysis · 2024</span><span class="eyebrow">RFM 分析</span></div>
+    <div class="anim-stagger-list">
+      <p class="kicker">用户价值分析 · User Segmentation</p>
+      <h1 class="h1 anim-fade-up" data-anim="fade-up">
+        电商用户<span class="gradient-text">RFM</span><br>价值分层分析报告
+      </h1>
+      <p class="lede">基于 Recency-Frequency-Monetary 模型，精准识别 2,000 名用户的价值层级与行为特征</p>
+      <div class="row wrap mt-l">
+        <span class="pill pill-accent">2,000 用户</span>
+        <span class="pill">14,066 笔订单</span>
+        <span class="pill">¥652 万交易额</span>
+        <span class="pill">8 类用户分层</span>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">分析周期：2024-01-01 至 2024-12-31</span><span class="slide-number" data-current="1" data-total="14"></span></div>
+    <div class="notes">各位好，今天给大家带来一份电商用户 RFM 价值分层分析报告。我们将基于 2024 年全年的交易数据，对 2000 名用户进行价值分层，帮助业务团队制定差异化的运营策略。</div>
+  </section>
+
+  <!-- ====== SLIDE 2: TOC ====== -->
+  <section class="slide" data-title="目录">
+    <p class="eyebrow">Contents · 目录</p>
+    <h2 class="h2">分析框架</h2>
+    <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+      <div class="card card-hover"><div class="row"><div class="h3 dim2" style="min-width:48px">01</div><div><h4>分析背景与框架</h4><p class="dim">为什么做 RFM，模型怎么建。</p></div></div></div>
+      <div class="card card-hover"><div class="row"><div class="h3 dim2" style="min-width:48px">02</div><div><h4>数据概览</h4><p class="dim">核心指标与 RFM 维度统计。</p></div></div></div>
+      <div class="card card-hover"><div class="row"><div class="h3 dim2" style="min-width:48px">03</div><div><h4>用户分层结果</h4><p class="dim">八类用户全景图与帕累托分析。</p></div></div></div>
+      <div class="card card-hover"><div class="row"><div class="h3 dim2" style="min-width:48px">04</div><div><h4>行为深度分析</h4><p class="dim">维度相关性、漏斗与月度趋势。</p></div></div></div>
+      <div class="card card-hover"><div class="row"><div class="h3 dim2" style="min-width:48px">05</div><div><h4>运营策略建议</h4><p class="dim">差异化方案与行动优先级。</p></div></div></div>
+      <div class="card card-hover"><div class="row"><div class="h3 dim2" style="min-width:48px">06</div><div><h4>总结与展望</h4><p class="dim">核心发现与后续计划。</p></div></div></div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="2" data-total="14"></span></div>
+    <div class="notes">报告分为六个部分。先讲分析背景和方法论，然后看数据全貌，接着是核心的用户分层结果，再深入分析用户行为特征，最后给出运营策略建议和总结。</div>
+  </section>
+
+  <!-- ====== SLIDE 3: 分析框架 ====== -->
+  <section class="slide" data-title="分析框架">
+    <p class="kicker">Framework · 分析框架</p>
+    <h2 class="h2">RFM 模型三维度</h2>
+    <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+      <div class="card card-accent">
+        <div style="font-size:40px;font-weight:900;color:var(--accent)">R</div>
+        <h4>Recency · 最近消费</h4>
+        <p class="dim">最近一次消费距今天数</p>
+        <div class="divider-accent mt-m" style="margin-left:0"></div>
+        <p class="dim mt-s">衡量用户<b>活跃度</b></p>
+      </div>
+      <div class="card card-accent">
+        <div style="font-size:40px;font-weight:900;color:var(--accent-2)">F</div>
+        <h4>Frequency · 消费频次</h4>
+        <p class="dim">统计周期内的消费次数</p>
+        <div class="divider-accent mt-m" style="margin-left:0;background:var(--accent-2)"></div>
+        <p class="dim mt-s">衡量用户<b>忠诚度</b></p>
+      </div>
+      <div class="card card-accent">
+        <div style="font-size:40px;font-weight:900;color:var(--accent-3)">M</div>
+        <h4>Monetary · 消费金额</h4>
+        <p class="dim">统计周期内的累计消费额</p>
+        <div class="divider-accent mt-m" style="margin-left:0;background:var(--accent-3)"></div>
+        <p class="dim mt-s">衡量用户<b>贡献度</b></p>
+      </div>
+    </div>
+    <p class="dim mt-l" style="font-size:15px">分层方法：按各维度<b>中位数</b>划分高/低两组，组合得到 8 类用户。R ≤46天为高，F &gt;4次为高，M &gt;¥1,134为高。</p>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="3" data-total="14"></span></div>
+    <div class="notes">RFM 模型从三个维度衡量用户价值：R 是最近消费时间，衡量活跃度；F 是消费频次，衡量忠诚度；M 是消费金额，衡量贡献度。我们按各维度的中位数将用户分为高低两组，组合得到 8 种用户类型。</div>
+  </section>
+
+  <!-- ====== SLIDE 4: 核心指标 ====== -->
+  <section class="slide" data-title="核心指标">
+    <p class="kicker">Overview · 数据概览</p>
+    <h2 class="h2">核心业务指标</h2>
+    <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+      <div class="card kpi-mini">
+        <p class="eyebrow">总用户数</p>
+        <div class="val"><span class="counter" data-to="2000">0</span></div>
+        <p class="label">独立用户</p>
+      </div>
+      <div class="card kpi-mini">
+        <p class="eyebrow">总订单数</p>
+        <div class="val"><span class="counter" data-to="14066">0</span></div>
+        <p class="label">全年订单</p>
+      </div>
+      <div class="card kpi-mini">
+        <p class="eyebrow">总交易额</p>
+        <div class="val">¥<span class="counter" data-to="652">0</span>万</div>
+        <p class="label">全年 GMV</p>
+      </div>
+      <div class="card kpi-mini">
+        <p class="eyebrow">平均客单价</p>
+        <div class="val">¥<span class="counter" data-to="464">0</span></div>
+        <p class="label">每笔订单</p>
+      </div>
+    </div>
+    <div class="grid g2 mt-l" style="gap:16px">
+      <div class="card-soft" style="padding:16px 20px;border-radius:var(--radius-sm)">
+        <div class="row" style="justify-content:space-between">
+          <span class="dim">人均消费</span><b style="font-size:20px">¥3,262</b>
+        </div>
+      </div>
+      <div class="card-soft" style="padding:16px 20px;border-radius:var(--radius-sm)">
+        <div class="row" style="justify-content:space-between">
+          <span class="dim">人均订单数</span><b style="font-size:20px">7.0 次</b>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="4" data-total="14"></span></div>
+    <div class="notes">先看核心数据：2000 名用户，全年产生了超过 14000 笔订单，总交易额达到 652 万。平均客单价 464 元，人均消费 3262 元，人均下单 7 次。这些是后续分层分析的基础数据。</div>
+  </section>
+
+  <!-- ====== SLIDE 5: RFM 维度分布 ====== -->
+  <section class="slide" data-title="RFM维度分布">
+    <p class="kicker">Distribution · 维度分布</p>
+    <h2 class="h2">RFM 三维度统计特征</h2>
+    <div class="grid g2 mt-l" style="align-items:start;gap:20px">
+      <div>
+        <table class="dt">
+          <thead><tr><th>统计量</th><th class="num">R(天)</th><th class="num">F(次)</th><th class="num">M(元)</th></tr></thead>
+          <tbody>
+            <tr><td>均值</td><td class="num">79.0</td><td class="num">6.9</td><td class="num">3,262</td></tr>
+            <tr><td>中位数</td><td class="num">46.0</td><td class="num">4.0</td><td class="num">1,134</td></tr>
+            <tr><td>标准差</td><td class="num">84.3</td><td class="num">6.7</td><td class="num">5,144</td></tr>
+            <tr><td>最小值</td><td class="num">1</td><td class="num">1</td><td class="num">16</td></tr>
+            <tr><td>最大值</td><td class="num">365</td><td class="num">29</td><td class="num">27,055</td></tr>
+          </tbody>
+        </table>
+        <div class="mt-m">
+          <div class="card-soft" style="padding:14px 18px;border-radius:var(--radius-sm);font-size:14px">
+            <p class="dim"><b style="color:var(--text-1)">关键发现：</b>R 维度右偏分布，大量用户近期活跃；F 呈指数衰减，低频用户占比高；M 显著右偏，少数用户贡献绝大部分收入。</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img src="01_rfm_distribution.png" class="chart-img" alt="RFM维度分布">
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="5" data-total="14"></span></div>
+    <div class="notes">看三个维度的统计分布。注意均值和中位数的差距——R 的均值是 79 天但中位数只有 46 天，说明少数长期不活跃的用户拉高了均值。M 维度更加极端，均值 3262 元是中位数 1134 元的近 3 倍，体现了典型的二八效应。</div>
+  </section>
+
+  <!-- ====== SLIDE 6: SECTION - 用户分层 ====== -->
+  <section class="slide center tc" data-title="Section: 分层结果">
+    <div style="max-width:780px;margin:0 auto">
+      <p class="kicker anim-fade-down" data-anim="fade-down">Section · 03</p>
+      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:96px">用户分层<br><span class="gradient-text">全景图</span></h1>
+      <div class="divider-accent" style="margin:24px auto"></div>
+      <p class="lede" style="margin:0 auto">八类用户 · 帕累托效应 · 收入贡献</p>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="6" data-total="14"></span></div>
+    <div class="notes">接下来进入核心部分——用户分层结果。我们来看看 RFM 模型如何将 2000 名用户划分为 8 个价值层级。</div>
+  </section>
+
+  <!-- ====== SLIDE 7: 八类用户饼图 ====== -->
+  <section class="slide" data-title="八类用户全景">
+    <p class="kicker">Segmentation · 用户分层</p>
+    <h2 class="h2">八类用户占比分布</h2>
+    <div class="grid g2 mt-l" style="align-items:center;gap:20px">
+      <div>
+        <img src="02_segment_pie.png" class="chart-img" alt="用户分层饼图">
+      </div>
+      <div>
+        <ul class="grid g1" style="list-style:none;padding:0;gap:10px">
+          <li class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);border-left:4px solid var(--seg-vip)"><b>重要价值用户</b> 33.9% — VIP 核心</li>
+          <li class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);border-left:4px solid var(--seg-grow)"><b>重要发展用户</b> 1.8% — 提频次</li>
+          <li class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);border-left:4px solid var(--seg-keep)"><b>重要保持用户</b> 12.0% — 召回</li>
+          <li class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);border-left:4px solid var(--seg-hold)"><b>重要挽留用户</b> 2.3% — 流失预警</li>
+          <li class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);border-left:4px solid var(--seg-low)"><b>一般挽留用户</b> 33.9% — 低价值</li>
+        </ul>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="7" data-total="14"></span></div>
+    <div class="notes">饼图展示了八类用户的占比分布。最值得注意的是两端：重要价值用户和一般挽留用户各占约 34%，构成了一个典型的杠铃型结构。中间层的用户相对较少，说明用户价值分化严重。</div>
+  </section>
+
+  <!-- ====== SLIDE 8: 分层详细数据 ====== -->
+  <section class="slide" data-title="分层详细数据">
+    <p class="kicker">Details · 详细数据</p>
+    <h2 class="h2">各层用户核心指标</h2>
+    <div class="card mt-m" style="padding:4px 10px">
+      <table class="dt">
+        <thead><tr><th>用户层级</th><th class="num">用户数</th><th class="num">占比</th><th class="num">平均R(天)</th><th class="num">平均F(次)</th><th class="num">平均M(元)</th><th class="num">收入贡献</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td><b>重要价值用户</b></td><td class="num">677</td><td class="num">33.9%</td><td class="num">17.7</td><td class="num">13.3</td><td class="num">¥7,619</td><td class="num" style="color:var(--good)">79.1%</td></tr>
+          <tr><td>重要发展用户</td><td class="num">37</td><td class="num">1.8%</td><td class="num">23.6</td><td class="num">3.8</td><td class="num">¥1,584</td><td class="num">0.9%</td></tr>
+          <tr><td>重要保持用户</td><td class="num">240</td><td class="num">12.0%</td><td class="num">85.2</td><td class="num">8.3</td><td class="num">¥3,749</td><td class="num">13.8%</td></tr>
+          <tr><td>重要挽留用户</td><td class="num">46</td><td class="num">2.3%</td><td class="num">107.4</td><td class="num">3.6</td><td class="num">¥1,451</td><td class="num">1.0%</td></tr>
+          <tr><td>一般价值用户</td><td class="num">41</td><td class="num">2.1%</td><td class="num">22.4</td><td class="num">6.2</td><td class="num">¥908</td><td class="num">0.6%</td></tr>
+          <tr><td>一般发展用户</td><td class="num">251</td><td class="num">12.6%</td><td class="num">23.0</td><td class="num">2.6</td><td class="num">¥392</td><td class="num">1.5%</td></tr>
+          <tr><td>一般保持用户</td><td class="num">30</td><td class="num">1.5%</td><td class="num">90.2</td><td class="num">6.0</td><td class="num">¥896</td><td class="num">0.4%</td></tr>
+          <tr><td>一般挽留用户</td><td class="num">678</td><td class="num">33.9%</td><td class="num">162.9</td><td class="num">2.0</td><td class="num">¥262</td><td class="num">2.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="8" data-total="14"></span></div>
+    <div class="notes">这张表格是核心交付物。高亮行是重要价值用户——677 人占了总用户的 34%，但贡献了 79.1% 的收入。再看重要保持用户，240 人贡献了 13.8% 的收入，但他们平均 85 天没有消费了，流失风险很高。</div>
+  </section>
+
+  <!-- ====== SLIDE 9: 帕累托分析 ====== -->
+  <section class="slide center tc" data-title="帕累托分析">
+    <p class="kicker">Pareto · 帕累托效应</p>
+    <div class="grid g3" style="gap:40px;margin-top:20px">
+      <div class="kpi-mini">
+        <div class="val gradient-text" style="font-size:72px">33.9%</div>
+        <p class="dim">重要价值用户占比</p>
+      </div>
+      <div class="kpi-mini">
+        <div style="font-size:72px;font-weight:900">→</div>
+        <p class="dim">贡献了</p>
+      </div>
+      <div class="kpi-mini">
+        <div class="val gradient-text" style="font-size:72px">79.1%</div>
+        <p class="dim">总收入占比</p>
+      </div>
+    </div>
+    <div class="grid g2 mt-l" style="gap:20px">
+      <div class="card-soft" style="padding:20px;border-radius:var(--radius)">
+        <h4>前 2 类重要用户</h4>
+        <div class="row mt-s" style="justify-content:space-between">
+          <span class="dim">用户占比</span><b>45.9%</b>
+        </div>
+        <div class="row mt-s" style="justify-content:space-between">
+          <span class="dim">收入贡献</span><b style="color:var(--good)">92.9%</b>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <img src="08_pareto.png" class="chart-img" alt="帕累托图">
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="9" data-total="14"></span></div>
+    <div class="notes">帕累托效应非常显著。不到一半的用户贡献了超过九成的收入。具体来说，前两类重要用户——重要价值加上重要保持——合计占用户数的 46%，但贡献了 93% 的收入。这意味着运营资源应该高度聚焦在这部分用户身上。</div>
+  </section>
+
+  <!-- ====== SLIDE 10: 散点图与热力图 ====== -->
+  <section class="slide" data-title="维度相关性">
+    <p class="kicker">Correlation · 维度相关性</p>
+    <h2 class="h2">RFM 维度关系分析</h2>
+    <div class="grid g2 mt-m" style="gap:20px">
+      <div>
+        <img src="04_rfm_scatter.png" class="chart-img" alt="RFM散点图">
+      </div>
+      <div>
+        <img src="07_rfm_heatmap.png" class="chart-img" alt="RFM热力图">
+      </div>
+    </div>
+    <div class="grid g3 mt-m" style="gap:12px">
+      <div class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);font-size:14px">
+        <b>F 与 M 强正相关</b><p class="dim" style="margin:0">高频用户往往也是高消费用户</p>
+      </div>
+      <div class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);font-size:14px">
+        <b>R 与 F 负相关</b><p class="dim" style="margin:0">近期活跃的用户消费频次更高</p>
+      </div>
+      <div class="card-soft" style="padding:12px 16px;border-radius:var(--radius-sm);font-size:14px">
+        <b>VIP 特征明显</b><p class="dim" style="margin:0">聚集在低R、高F、高M区域</p>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="10" data-total="14"></span></div>
+    <div class="notes">散点图和热力图揭示了维度间的相关性。最关键的发现是：消费频次和消费金额高度正相关，这意味着提升复购率可以直接带动收入增长。另外，近期活跃的用户通常消费频次更高，说明活跃度是忠诚度的前置指标。</div>
+  </section>
+
+  <!-- ====== SLIDE 11: 漏斗与趋势 ====== -->
+  <section class="slide" data-title="漏斗与趋势">
+    <p class="kicker">Funnel & Trend · 行为分析</p>
+    <h2 class="h2">用户行为漏斗与月度趋势</h2>
+    <div class="grid g2 mt-m" style="gap:20px">
+      <div>
+        <img src="05_funnel.png" class="chart-img" alt="行为漏斗">
+        <div class="grid g2 mt-s" style="gap:8px">
+          <div class="card-soft" style="padding:10px 14px;border-radius:var(--radius-sm);font-size:13px">
+            <b style="color:var(--good)">62.0%</b> 浏览→加购
+          </div>
+          <div class="card-soft" style="padding:10px 14px;border-radius:var(--radius-sm);font-size:13px">
+            <b style="color:var(--warn)">56.5%</b> 加购→购买
+          </div>
+        </div>
+      </div>
+      <div>
+        <img src="06_monthly_trend.png" class="chart-img" alt="月度趋势">
+        <div class="card-soft mt-s" style="padding:10px 14px;border-radius:var(--radius-sm);font-size:13px">
+          月度消费总额与活跃用户数呈同步增长趋势，Q4 达到全年峰值
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="11" data-total="14"></span></div>
+    <div class="notes">漏斗分析显示从加购到购买的转化率是 56.5%，这是核心优化环节。月度趋势方面，全年消费总额和活跃用户数同步增长，Q4 达到全年峰值，可能与年末促销活动有关。</div>
+  </section>
+
+  <!-- ====== SLIDE 12: Top 10 ====== -->
+  <section class="slide" data-title="Top 10 用户">
+    <p class="kicker">Top Users · 高价值用户</p>
+    <h2 class="h2">Top 10 高价值用户</h2>
+    <div class="card mt-m" style="padding:4px 10px">
+      <table class="dt">
+        <thead><tr><th>排名</th><th>用户ID</th><th class="num">R(天)</th><th class="num">F(次)</th><th class="num">M(元)</th><th class="num">R分</th><th class="num">F分</th><th class="num">M分</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>U00386</td><td class="num">28</td><td class="num">26</td><td class="num">¥27,055</td><td class="num">4</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>2</td><td>U01628</td><td class="num">25</td><td class="num">26</td><td class="num">¥26,890</td><td class="num">4</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>3</td><td>U00001</td><td class="num">5</td><td class="num">24</td><td class="num">¥26,786</td><td class="num">5</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>4</td><td>U00413</td><td class="num">4</td><td class="num">25</td><td class="num">¥26,205</td><td class="num">5</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>5</td><td>U01741</td><td class="num">4</td><td class="num">26</td><td class="num">¥25,892</td><td class="num">5</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>6</td><td>U01620</td><td class="num">19</td><td class="num">26</td><td class="num">¥25,797</td><td class="num">4</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>7</td><td>U01215</td><td class="num">26</td><td class="num">25</td><td class="num">¥25,695</td><td class="num">4</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>8</td><td>U01971</td><td class="num">11</td><td class="num">26</td><td class="num">¥25,089</td><td class="num">5</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>9</td><td>U00141</td><td class="num">38</td><td class="num">26</td><td class="num">¥24,879</td><td class="num">3</td><td class="num">5</td><td class="num">5</td></tr>
+          <tr><td>10</td><td>U01455</td><td class="num">1</td><td class="num">23</td><td class="num">¥24,815</td><td class="num">5</td><td class="num">5</td><td class="num">5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-soft mt-m" style="padding:12px 18px;border-radius:var(--radius-sm);font-size:14px">
+      <b>特征</b>：Top 10 用户 R 分均 ≥ 3，F 和 M 分全部满分 5，消费金额集中在 ¥24,000–27,000 区间，人均年消费约 26 次。
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="12" data-total="14"></span></div>
+    <div class="notes">Top 10 用户的特征非常一致：F 和 M 评分全部满分，R 评分也基本在 4-5 分。他们年消费 23-26 次，消费金额在 2.4 万到 2.7 万之间。这些是真正的超级用户，需要最高级别的 VIP 维护。</div>
+  </section>
+
+  <!-- ====== SLIDE 13: 运营策略 ====== -->
+  <section class="slide" data-title="运营策略">
+    <p class="kicker">Strategy · 运营策略</p>
+    <h2 class="h2">差异化运营方案</h2>
+    <div class="grid g2 mt-m anim-stagger-list" data-anim-target style="gap:14px">
+      <div class="strat-card" style="background:color-mix(in srgb,var(--seg-vip) 10%,var(--surface));border-color:var(--seg-vip)">
+        <h4 style="color:var(--seg-vip)">重要价值用户 · VIP 维护</h4>
+        <p class="dim" style="font-size:14px">专属客服 · 优先体验新品 · 积分加倍</p>
+        <div class="row mt-s" style="gap:16px;font-size:13px"><span class="dim">预算 <b>40%</b></span><span class="dim">目标：维持 LTV</span></div>
+      </div>
+      <div class="strat-card" style="background:color-mix(in srgb,var(--seg-keep) 10%,var(--surface));border-color:var(--seg-keep)">
+        <h4 style="color:var(--seg-keep)">重要保持用户 · 召回</h4>
+        <p class="dim" style="font-size:14px">个性化 Push · 专属优惠券 · 生日关怀</p>
+        <div class="row mt-s" style="gap:16px;font-size:13px"><span class="dim">预算 <b>20%</b></span><span class="dim">目标：唤醒沉睡</span></div>
+      </div>
+      <div class="strat-card" style="background:color-mix(in srgb,var(--seg-grow) 10%,var(--surface));border-color:var(--seg-grow)">
+        <h4 style="color:var(--seg-grow)">重要发展用户 · 提频次</h4>
+        <p class="dim" style="font-size:14px">组合推荐 · 满减引导多次购买</p>
+        <div class="row mt-s" style="gap:16px;font-size:13px"><span class="dim">预算 <b>15%</b></span><span class="dim">目标：转化为 VIP</span></div>
+      </div>
+      <div class="strat-card" style="background:color-mix(in srgb,var(--seg-hold) 10%,var(--surface));border-color:var(--seg-hold)">
+        <h4 style="color:var(--seg-hold)">重要挽留用户 · 流失预警</h4>
+        <p class="dim" style="font-size:14px">大额优惠券 · 问卷调研流失原因</p>
+        <div class="row mt-s" style="gap:16px;font-size:13px"><span class="dim">预算 <b>15%</b></span><span class="dim">目标：挽回高价值</span></div>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="13" data-total="14"></span></div>
+    <div class="notes">针对不同层级的用户，需要制定差异化的运营策略。40% 的预算给重要价值用户做 VIP 维护；20% 用于召回重要保持用户；15% 用于提升重要发展用户的频次；15% 用于挽留有流失风险的高价值用户。一般用户只用 10% 做基础运营。</div>
+  </section>
+
+  <!-- ====== SLIDE 14: 总结 ====== -->
+  <section class="slide center tc" data-title="总结">
+    <div style="max-width:900px">
+      <p class="kicker">Summary · 核心结论</p>
+      <h1 class="h1 anim-fade-up" data-anim="fade-up" style="font-size:64px">
+        二八效应<span class="gradient-text">显著</span>
+      </h1>
+      <div class="grid g2 mt-l" style="text-align:left;gap:16px">
+        <div class="card-soft" style="padding:18px 22px;border-radius:var(--radius)">
+          <h4>核心发现</h4>
+          <ul class="dim" style="font-size:14px;line-height:1.8;padding-left:18px">
+            <li><b>34%</b> 的用户贡献 <b>79%</b> 的收入</li>
+            <li><b>240 人</b> 有流失风险需紧急召回</li>
+            <li><b>37 人</b> 消费高但频次低，可转化</li>
+            <li><b>34%</b> 一般挽留用户需评估 ROI</li>
+          </ul>
+        </div>
+        <div class="card-soft" style="padding:18px 22px;border-radius:var(--radius)">
+          <h4>后续行动</h4>
+          <ul class="dim" style="font-size:14px;line-height:1.8;padding-left:18px">
+            <li>结合行为数据丰富用户画像</li>
+            <li>建立流失预测模型</li>
+            <li>设计 A/B 测试验证策略效果</li>
+            <li>按月跟踪 RFM 分层变化</li>
+          </ul>
+        </div>
+      </div>
+      <p class="lede mt-l" style="margin:0 auto;font-size:16px">Python + Pandas + Matplotlib 自动生成 · RFM 分层模型</p>
+    </div>
+    <div class="deck-footer"><span class="dim2">RFM 分析报告</span><span class="slide-number" data-current="14" data-total="14"></span></div>
+    <div class="notes">总结一下。这份分析最核心的发现是二八效应非常显著——34% 的重要价值用户贡献了近 80% 的收入。最紧急的行动是召回 240 名重要保持用户，防止高价值用户流失。长期来看，需要建立流失预测模型和 A/B 测试机制，让运营策略更精准。感谢大家。</div>
+  </section>
+
+</div>
+
+<script src="assets/runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+/* Python Playground 样式 */
+.python-playground {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--font-main);
+}
+
+.python-playground--loading {
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--color-text-secondary);
+}
+
+.python-playground__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-python);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.python-playground__editor-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.python-playground__editor {
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.python-playground__run-btn {
+  background: #43e97b;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-tag);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: background var(--transition-fast);
+  align-self: flex-end;
+}
+
+.python-playground__run-btn:hover:not(:disabled) {
+  background: #38d7ae;
+}
+
+.python-playground__run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.python-playground__result {
+  border-radius: var(--radius-tag);
+  padding: 12px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.python-playground__result--success {
+  border: 2px solid var(--color-python);
+  background: rgba(78, 205, 196, 0.05);
+}
+
+.python-playground__result--error {
+  border: 2px solid var(--color-accent);
+  background: rgba(255, 107, 107, 0.05);
+}
+
+.python-playground__error-msg {
+  color: var(--color-accent);
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.python-playground__empty {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+.python-playground__output {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.python-playground__loading-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}

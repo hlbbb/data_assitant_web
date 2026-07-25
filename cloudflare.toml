@@ -1,0 +1,45 @@
+# Cloudflare Pages 配置文件
+# 文档: https://developers.cloudflare.com/pages/platform/build-configuration
+
+# 构建命令：
+# 1. cd datapath && npm install && npm run build
+#    - VITE_BASE_PATH: 部署到根域名时为空，部署到子路径时需设为对应路径
+#      当前仓库 hlbbb/data_assitant_web 在 GitHub Pages 上访问路径为 /data_assitant_web/，
+#      若同时部署到 Cloudflare Pages 根域名，base 应设为 '/'
+# 2. 拷贝学习资料、运行时资源到 dist/ 同级（必须！）
+#    否则详情页会找不到 sql_learning/ 等内容
+command = "cd datapath && npm install && npm run build && cp -r ../sql_learning ../python_learning ../data_tk_learning ../data_project ../projects ../pyodide ../sql-wasm.js ../sql-wasm.wasm ../sql-wasm-browser.wasm dist/ && touch dist/.nojekyll"
+
+# 输出目录
+output_directory = "datapath/dist"
+
+# 根目录（可选，默认为仓库根目录）
+# root_directory = ""
+
+# 环境变量
+[env]
+VITE_BASE_PATH = "/"
+VITE_SUPABASE_URL = "https://pheyhilifkwgdcqlrrgh.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZXloaWxpZmt3Z2RjcWxycmdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNjIzNDYsImV4cCI6MjA5NDgzODM0Nn0.Ao6JJx0fzTQX-Hh1vRzZaEzWi_Z-80e7fFkkTVMD8k0"
+
+# 构建环境
+[build.environment]
+NODE_VERSION = "20"
+
+# 路由重写（处理 SPA）
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+# 静态资源缓存
+[[headers]]
+for = "/assets/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML 文件不缓存
+[[headers]]
+for = "/*.html"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"

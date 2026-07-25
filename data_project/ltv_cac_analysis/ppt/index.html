@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTV/CAC 用户生命周期分析</title>
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" id="theme-link" href="assets/themes/soft-pastel.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<style>
+  :root {
+    --ltv: #7c6fe0;
+    --cac: #e07c6f;
+    --ratio-good: #6fbf8a;
+    --ratio-warn: #e0b46f;
+    --ratio-bad: #e06f6f;
+    --accent-blue: #6f9fe0;
+  }
+  .slide.cover-slide,
+  .slide.ending-slide {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slide.content-slide {
+    justify-content: flex-start;
+  }
+  .slide-header { margin-bottom: 0.6rem; }
+  .slide-header h2 { margin: 0; font-size: 1.7rem; font-weight: 800; }
+  .slide-header p { margin: 0.15rem 0 0 0; color: var(--text-3); font-size: 0.9rem; }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 0.8rem;
+  }
+  .kpi {
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+    padding: 1.2rem 1rem;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .kpi .val { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+  .kpi .lbl { font-size: 0.8rem; color: var(--text-3); margin-top: 0.2rem; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    align-items: start;
+  }
+
+  .chart-img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: white;
+  }
+
+  .callout {
+    background: var(--surface-2);
+    border-left: 4px solid var(--ltv);
+    padding: 0.8rem 1rem;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+  }
+  .callout strong { color: var(--ltv); }
+
+  .formula-box {
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.4rem;
+    border: 1px solid var(--border);
+    font-family: var(--font-mono, monospace);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-top: 0.6rem;
+  }
+
+  .health-badge {
+    display: inline-block;
+    padding: 0.15rem 0.7rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .priority-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+  }
+  .p-cell {
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    padding: 0.9rem;
+    border: 1px solid var(--border);
+  }
+  .p-cell h4 { margin: 0 0 0.4rem 0; font-size: 0.85rem; }
+  .p-cell ul { margin: 0; padding-left: 1rem; font-size: 0.78rem; color: var(--text-2); }
+</style>
+</head>
+<body>
+
+<main class="deck">
+
+<!-- ====== 1. 封面 ====== -->
+<section class="slide cover-slide is-active">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+    <div style="font-size:0.8rem;color:var(--text-3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.8rem;">Business Health Analysis</div>
+    <h1 style="font-size:2.8rem;font-weight:900;line-height:1.2;margin:0;">LTV / CAC<br>用户生命周期分析</h1>
+    <div style="font-size:1rem;color:var(--text-2);margin-top:1.2rem;">3,000 用户 · 20,439 笔交易 · 24 个月追踪</div>
+    <div style="display:flex;gap:0.8rem;margin-top:1.8rem;">
+      <span class="health-badge" style="background:var(--ltv);">LTV 生命周期价值</span>
+      <span class="health-badge" style="background:var(--cac);">CAC 获客成本</span>
+      <span class="health-badge" style="background:var(--ratio-good);">LTV/CAC 比值</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 2. 模型定义 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>核心指标定义</h2>
+    <p>LTV/CAC 是评估商业模式健康度的黄金标准</p>
+  </div>
+  <div class="formula-box">
+    <strong style="color:var(--ltv);">LTV</strong> = ARPU &times; 平均生命周期（月）&nbsp;&nbsp;&nbsp;→ 用户终身贡献<br>
+    <strong style="color:var(--cac);">CAC</strong> = 总获客成本 &divide; 新用户数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 获取一个用户的花费<br>
+    <strong style="color:var(--ratio-good);">LTV / CAC</strong> &gt; 3 → 健康 &nbsp;|&nbsp; 1~3 → 需优化 &nbsp;|&nbsp; &lt; 1 → 危险<br>
+    <strong style="color:var(--ratio-warn);">回报周期</strong> = CAC &divide; (ARPU &times; 毛利率)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 多久收回获客投资
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-top:1.2rem;">
+    <div style="background:var(--surface-2);border-radius:var(--radius-md);padding:0.8rem;text-align:center;border:1px solid var(--border);">
+      <div style="font-size:1.6rem;font-weight:800;color:var(--ltv);">1,694 元</div>
+      <div style="font-size:0.8rem;color:var(--text-3);">LTV 生命周期价值</div>
+    </div>
+    <div style="background:var(--surface-2);border-radius:var(--radius-md);padding:0.8rem;text-align:center;border:1px solid var(--border);">
+      <div style="font-size:1.6rem;font-weight:800;color:var(--cac);">35 元</div>
+      <div style="font-size:0.8rem;color:var(--text-3);">CAC 获客成本</div>
+    </div>
+    <div style="background:var(--surface-2);border-radius:var(--radius-md);padding:0.8rem;text-align:center;border:1px solid var(--border);">
+      <div style="font-size:1.6rem;font-weight:800;color:var(--ratio-good);">48.4</div>
+      <div style="font-size:0.8rem;color:var(--text-3);">LTV/CAC 比值</div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:1rem;">
+    <strong>LTV/CAC = 48.4</strong>，远超健康阈值 3.0，回报周期仅 0.2 个月——商业模式极为健康，获客投入产出比优秀。
+  </div>
+</section>
+
+<!-- ====== 3. KPI 概览 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>核心指标一览</h2>
+    <p>24 个月全量数据汇总</p>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="val" style="color:var(--ltv);">3,000</div><div class="lbl">总用户数</div></div>
+    <div class="kpi"><div class="val" style="color:var(--ltv);">20,439</div><div class="lbl">总订单数</div></div>
+    <div class="kpi"><div class="val" style="color:var(--ltv);">963 万</div><div class="lbl">总收入</div></div>
+    <div class="kpi"><div class="val" style="color:var(--accent-blue);">331 元</div><div class="lbl">ARPU</div></div>
+    <div class="kpi"><div class="val" style="color:var(--accent-blue);">5.11 月</div><div class="lbl">平均生命周期</div></div>
+    <div class="kpi"><div class="val" style="color:var(--ratio-good);">48.4</div><div class="lbl">LTV/CAC</div></div>
+    <div class="kpi"><div class="val" style="color:var(--ratio-warn);">0.2 月</div><div class="lbl">回报周期</div></div>
+    <div class="kpi"><div class="val" style="color:var(--cac);">35 元</div><div class="lbl">CAC</div></div>
+  </div>
+  <div class="callout">
+    <strong>关键结论：</strong>整体 LTV/CAC 高达 48.4，说明每投入 1 元获客成本，可收回 48.4 元生命周期收入。回报周期仅 0.2 个月（约 6 天）。
+  </div>
+</section>
+
+<!-- ====== 4. LTV/CAC 比值 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>分渠道 LTV/CAC 比值</h2>
+    <p>口碑推荐比值最高（145），付费广告最低（30）</p>
+  </div>
+  <img src="01_ltv_cac_ratio.png" class="chart-img" style="max-height:380px;">
+  <div class="callout">
+    <strong>发现：</strong>所有渠道 LTV/CAC 均远超 3.0 健康线。口碑推荐比值 145（成本仅 12 元/人），付费广告 30（成本 55 元/人但 LTV 也高）。
+  </div>
+</section>
+
+<!-- ====== 5. LTV vs CAC 散点 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>LTV vs CAC 渠道定位</h2>
+    <p>右上方为最优渠道（高LTV + 低CAC）</p>
+  </div>
+  <img src="02_ltv_cac_scatter.png" class="chart-img" style="max-height:380px;">
+  <div class="callout">
+    <strong>洞察：</strong>口碑推荐处于最优象限——低CAC + 高LTV。付费广告虽CAC最高，但LTV也达 1673 元，说明广告吸引了高价值用户。
+  </div>
+</section>
+
+<!-- ====== 6. 同期群留存 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>同期群留存热力图</h2>
+    <p>按注册月份追踪 M0~M11 留存率</p>
+  </div>
+  <img src="03_cohort_retention.png" class="chart-img" style="max-height:410px;">
+</section>
+
+<!-- ====== 7. 同期群收入 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>同期群 LTV 增长曲线</h2>
+    <p>每条线代表一个注册月份的累计人均收入</p>
+  </div>
+  <img src="04_cohort_revenue.png" class="chart-img" style="max-height:380px;">
+  <div class="callout">
+    <strong>趋势：</strong>早期同期群（2023 H1）曲线更长，LTV 增长更充分；近期同期群还在爬坡中。老用户持续贡献收入是 LTV 的核心来源。
+  </div>
+</section>
+
+<!-- ====== 8. 月度收入 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>月度收入趋势</h2>
+    <p>24 个月收入增长 + 累计曲线</p>
+  </div>
+  <img src="05_monthly_revenue.png" class="chart-img" style="max-height:380px;">
+  <div class="callout">
+    <strong>增长：</strong>月度收入从 2023-01 的 1.3 万增长到 2024-08 峰值 44.4 万，ARPU 同步提升 372→694 元。收入增长主要由用户基数扩大和单客价值提升共同驱动。
+  </div>
+</section>
+
+<!-- ====== 9. LTV 分布 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>LTV 分布 & 用户价值分层</h2>
+    <p>鲸鱼用户占少数但贡献绝大多数收入</p>
+  </div>
+  <div class="two-col" style="margin-top:0.3rem;">
+    <div><img src="06_ltv_distribution.png" class="chart-img" alt="LTV分布"></div>
+    <div><img src="09_user_value_distribution.png" class="chart-img" alt="价值分层"></div>
+  </div>
+  <div class="callout">
+    <strong>帕累托效应：</strong>鲸鱼用户（约5%）贡献约40%收入，虾米用户（约50%）仅贡献约10%。典型的二八分布——少数用户驱动大部分收入。
+  </div>
+</section>
+
+<!-- ====== 10. 渠道效率 & 回报周期 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>渠道效率 & 回报周期</h2>
+    <p>哪个渠道ROI最高？多久收回获客成本？</p>
+  </div>
+  <div class="two-col" style="margin-top:0.3rem;">
+    <div><img src="07_channel_efficiency.png" class="chart-img" alt="渠道效率"></div>
+    <div><img src="08_payback_period.png" class="chart-img" alt="回报周期"></div>
+  </div>
+  <div class="callout">
+    <strong>结论：</strong>所有渠道回报周期均在 1 个月内，其中口碑推荐和内容营销最快。付费广告虽成本高但回报周期仍在可接受范围。
+  </div>
+</section>
+
+<!-- ====== 11. 策略建议 ====== -->
+<section class="slide content-slide">
+  <div class="slide-header">
+    <h2>优化策略建议</h2>
+    <p>基于 LTV/CAC 分析的行动方案</p>
+  </div>
+  <div class="priority-grid">
+    <div class="p-cell" style="border-color:var(--ratio-good);">
+      <h4 style="color:var(--ratio-good);">P0 加大口碑推荐</h4>
+      <ul>
+        <li>CAC 仅 12 元，LTV/CAC 高达 145</li>
+        <li>设计双向奖励（推荐人+被推荐人）</li>
+        <li>目标：口碑渠道占比从 10% 提升至 25%</li>
+      </ul>
+    </div>
+    <div class="p-cell" style="border-color:var(--ltv);">
+      <h4 style="color:var(--ltv);">P1 提升 LTV</h4>
+      <ul>
+        <li>延长用户生命周期（当前 5.1 月）</li>
+        <li>提升复购率 & 客单价</li>
+        <li>鲸鱼用户专属运营，防止流失</li>
+      </ul>
+    </div>
+    <div class="p-cell" style="border-color:var(--cac);">
+      <h4 style="color:var(--cac);">P1 优化付费广告</h4>
+      <ul>
+        <li>CAC 55 元最高，需提高精准度</li>
+        <li>按城市等级定向投放（一线城市LTV更高）</li>
+        <li>监测分渠道 ROI 波动</li>
+      </ul>
+    </div>
+    <div class="p-cell" style="border-color:var(--accent-blue);">
+      <h4 style="color:var(--accent-blue);">P2 城市下沉</h4>
+      <ul>
+        <li>分析各城市等级的 LTV/CAC</li>
+        <li>二线城市性价比可能最优</li>
+        <li>设计针对下沉市场的产品策略</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 12. 总结 ====== -->
+<section class="slide ending-slide">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+    <h2 style="font-size:2.2rem;font-weight:900;margin-bottom:1.2rem;">核心发现</h2>
+    <div style="max-width:750px;text-align:left;">
+      <div style="display:flex;gap:0.8rem;align-items:flex-start;margin-bottom:0.8rem;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--ltv);flex-shrink:0;margin-top:6px;"></div>
+        <div><strong>LTV 1,694 元</strong> — 用户生命周期价值充足，5.1个月平均生命周期</div>
+      </div>
+      <div style="display:flex;gap:0.8rem;align-items:flex-start;margin-bottom:0.8rem;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--cac);flex-shrink:0;margin-top:6px;"></div>
+        <div><strong>CAC 35 元</strong> — 获客成本极低，口碑推荐仅 12 元/人</div>
+      </div>
+      <div style="display:flex;gap:0.8rem;align-items:flex-start;margin-bottom:0.8rem;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--ratio-good);flex-shrink:0;margin-top:6px;"></div>
+        <div><strong>LTV/CAC = 48.4</strong> — 远超健康线 3.0，商业模式非常健康</div>
+      </div>
+      <div style="display:flex;gap:0.8rem;align-items:flex-start;margin-bottom:0.8rem;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--ratio-warn);flex-shrink:0;margin-top:6px;"></div>
+        <div><strong>回报周期 0.2 月</strong> — 约 6 天即可收回获客成本</div>
+      </div>
+      <div style="display:flex;gap:0.8rem;align-items:flex-start;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;margin-top:6px;"></div>
+        <div><strong>增长空间</strong> — 加大口碑推荐 + 延长生命周期 = LTV 持续提升</div>
+      </div>
+    </div>
+    <div style="margin-top:2rem;font-size:0.85rem;color:var(--text-3);">
+      Python + Pandas + Matplotlib | LTV/CAC 模型 + 同期群分析
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script src="assets/runtime.js"></script>
+</body>
+</html>

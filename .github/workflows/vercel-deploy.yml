@@ -1,0 +1,49 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: datapath
+        run: npm ci
+
+      - name: Build
+        working-directory: datapath
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - name: Copy static assets
+        run: |
+          cp -r sql_learning datapath/dist/
+          cp -r python_learning datapath/dist/
+          cp -r data_tk_learning datapath/dist/
+          cp -r data_project datapath/dist/
+          cp -r projects datapath/dist/
+          cp -r pyodide datapath/dist/
+          cp sql-wasm.js datapath/dist/ 2>/dev/null || true
+          cp sql-wasm.wasm datapath/dist/ 2>/dev/null || true
+          cp sql-wasm-browser.wasm datapath/dist/ 2>/dev/null || true
+
+      - name: Deploy to Vercel
+        uses: vercel/action-deploy@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: datapath/dist

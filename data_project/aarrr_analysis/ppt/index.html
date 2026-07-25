@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AARRR 海盗指标分析</title>
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" id="theme-link" href="assets/themes/tokyo-night.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<style>
+  :root {
+    --aarrr-acq: #7aa2f7;
+    --aarrr-act: #9ece6a;
+    --aarrr-ret: #e0af68;
+    --aarrr-rev: #f7768e;
+    --aarrr-ref: #bb9af7;
+  }
+  .kpi-grid {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .kpi-card {
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .kpi-card .kpi-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .kpi-card .kpi-label {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    margin-top: 0.3rem;
+  }
+  .chart-img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  .funnel-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.5rem;
+  }
+  .funnel-step .step-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .stage-tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .insight-box {
+    background: var(--surface-2);
+    border-left: 4px solid var(--aarrr-act);
+    padding: 1rem 1.2rem;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    margin-top: 1rem;
+  }
+  .priority-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .priority-cell {
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    border: 1px solid var(--border);
+  }
+  .priority-cell h4 { margin: 0 0 0.5rem 0; font-size: 0.9rem; }
+  .priority-cell ul { margin: 0; padding-left: 1rem; font-size: 0.8rem; color: var(--text-2); }
+  .slide.has-header { justify-content: flex-start; }
+  .slide-header { margin-bottom: 0.5rem; }
+  .slide-header h2 { margin: 0; font-size: 1.8rem; font-weight: 800; }
+  .slide-header p { margin: 0.2rem 0 0 0; color: var(--text-2); font-size: 0.95rem; }
+</style>
+</head>
+<body>
+
+<main class="deck">
+
+<!-- ============ SLIDE 1: 封面 ============ -->
+<section class="slide is-active" data-anim="fade-up">
+  <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;">
+    <div style="font-size:0.9rem;color:var(--text-2);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;" data-anim="fade-up">Data Analysis Project</div>
+    <h1 style="font-size:3.2rem;font-weight:900;line-height:1.15;margin:0;" data-anim="fade-up">AARRR 海盗指标<br>用户增长分析</h1>
+    <div style="font-size:1.1rem;color:var(--text-2);margin-top:1.5rem;" data-anim="fade-up">5,000 用户 · 16,026 事件 · ¥309,746 收入</div>
+    <div style="display:flex;gap:0.8rem;margin-top:2rem;" data-anim="fade-up">
+      <span class="stage-tag" style="background:var(--aarrr-acq);color:#1a1b26;">Acquisition</span>
+      <span class="stage-tag" style="background:var(--aarrr-act);color:#1a1b26;">Activation</span>
+      <span class="stage-tag" style="background:var(--aarrr-ret);color:#1a1b26;">Retention</span>
+      <span class="stage-tag" style="background:var(--aarrr-rev);color:#1a1b26;">Revenue</span>
+      <span class="stage-tag" style="background:var(--aarrr-ref);color:#1a1b26;">Referral</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2: AARRR框架 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2>AARRR 是什么？</h2>
+    <p>用户增长的全链路漏斗模型</p>
+  </div>
+  <div class="two-col" style="margin-top:1rem;">
+    <div>
+      <div class="funnel-step" style="background:rgba(122,162,247,0.15);">
+        <span class="step-dot" style="background:var(--aarrr-acq);"></span>
+        <div><strong style="color:var(--aarrr-acq);">Acquisition 获客</strong><br><span style="font-size:0.85rem;color:var(--text-2);">用户从哪里来？渠道效率如何？</span></div>
+      </div>
+      <div class="funnel-step" style="background:rgba(158,206,106,0.15);">
+        <span class="step-dot" style="background:var(--aarrr-act);"></span>
+        <div><strong style="color:var(--aarrr-act);">Activation 激活</strong><br><span style="font-size:0.85rem;color:var(--text-2);">用户体验到 Aha Moment 了吗？</span></div>
+      </div>
+      <div class="funnel-step" style="background:rgba(224,175,104,0.15);">
+        <span class="step-dot" style="background:var(--aarrr-ret);"></span>
+        <div><strong style="color:var(--aarrr-ret);">Retention 留存</strong><br><span style="font-size:0.85rem;color:var(--text-2);">用户愿意持续回来吗？</span></div>
+      </div>
+      <div class="funnel-step" style="background:rgba(247,118,142,0.15);">
+        <span class="step-dot" style="background:var(--aarrr-rev);"></span>
+        <div><strong style="color:var(--aarrr-rev);">Revenue 收入</strong><br><span style="font-size:0.85rem;color:var(--text-2);">用户愿意付费吗？收入结构如何？</span></div>
+      </div>
+      <div class="funnel-step" style="background:rgba(187,154,247,0.15);">
+        <span class="step-dot" style="background:var(--aarrr-ref);"></span>
+        <div><strong style="color:var(--aarrr-ref);">Referral 传播</strong><br><span style="font-size:0.85rem;color:var(--text-2);">用户会推荐给好友吗？K因子多少？</span></div>
+      </div>
+    </div>
+    <div>
+      <img src="01_aarrr_funnel.png" class="chart-img" alt="AARRR全漏斗">
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3: 核心指标概览 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2>核心指标一览</h2>
+    <p>全漏斗关键数据</p>
+  </div>
+  <div class="kpi-grid" style="margin-top:1rem;">
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-acq);">5,000</div>
+      <div class="kpi-label">总用户数</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-acq);">¥23.51</div>
+      <div class="kpi-label">平均 CAC</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-act);">74.5%</div>
+      <div class="kpi-label">激活率</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-ret);">44.2%</div>
+      <div class="kpi-label">次日留存</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-rev);">¥309,746</div>
+      <div class="kpi-label">总收入</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-rev);">¥62</div>
+      <div class="kpi-label">ARPU</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-rev);">18.7%</div>
+      <div class="kpi-label">付费转化率</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--aarrr-ref);">0.24</div>
+      <div class="kpi-label">K 因子</div>
+    </div>
+  </div>
+  <div class="insight-box" style="margin-top:1.5rem;">
+    <strong>关键发现：</strong>付费转化率仅 18.7% 是最大瓶颈；K 因子 0.24 远低于病毒式增长阈值 1.0，传播效应微弱。
+  </div>
+</section>
+
+<!-- ============ SLIDE 4: Acquisition 获客 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2><span style="color:var(--aarrr-acq);">Acquisition</span> 获客分析</h2>
+    <p>5大渠道，自然搜索占比最高</p>
+  </div>
+  <div class="two-col" style="margin-top:0.5rem;">
+    <div>
+      <img src="02_channel_pie.png" class="chart-img" alt="渠道占比">
+    </div>
+    <div>
+      <img src="03_channel_compare.png" class="chart-img" alt="渠道对比">
+    </div>
+  </div>
+  <div class="insight-box" style="border-left-color:var(--aarrr-acq);">
+    <strong>发现：</strong>自然搜索用户量最大(30.4%)但 CAC 最低(¥5)；付费广告用户多但 CAC 高达 ¥50。口碑推荐 CAC 仅 ¥10 且激活率最高，应加大投入。
+  </div>
+</section>
+
+<!-- ============ SLIDE 5: 月度获客趋势 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2><span style="color:var(--aarrr-acq);">获客趋势</span></h2>
+    <p>月度新增用户与累计增长</p>
+  </div>
+  <img src="04_monthly_acquisition.png" class="chart-img" style="max-height:440px;margin-top:0.5rem;" alt="月度获客">
+  <div class="insight-box" style="border-left-color:var(--aarrr-acq);margin-top:1rem;">
+    <strong>趋势：</strong>下半年用户增长明显加速，Q4 大促期间新增用户数约为 Q1 的 5 倍，增长曲线呈指数型。
+  </div>
+</section>
+
+<!-- ============ SLIDE 6: Activation 激活 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2><span style="color:var(--aarrr-act);">Activation</span> 激活分析</h2>
+    <p>整体激活率 74.48%，口碑推荐渠道最优</p>
+  </div>
+  <div class="two-col" style="margin-top:0.5rem;">
+    <div>
+      <img src="05_activation_rate.png" class="chart-img" alt="激活率">
+    </div>
+    <div>
+      <div style="background:var(--surface-2);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid var(--border);">
+        <h3 style="margin-top:0;">激活率排名</h3>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+          <span>1. 口碑推荐</span><strong style="color:var(--aarrr-act);">76.5%</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+          <span>2. 应用商店</span><strong style="color:var(--aarrr-act);">75.3%</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+          <span>3. 社交媒体</span><strong style="color:var(--aarrr-act);">75.1%</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+          <span>4. 自然搜索</span><strong style="color:var(--aarrr-act);">74.7%</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+          <span>5. 付费广告</span><strong style="color:var(--aarrr-rev);">72.5%</strong>
+        </div>
+      </div>
+      <div class="insight-box" style="border-left-color:var(--aarrr-act);margin-top:1rem;">
+        <strong>洞察：</strong>付费广告用户激活率最低——可能因为广告吸引了非目标用户，需要优化投放精准度。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7: Retention 留存 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2><span style="color:var(--aarrr-ret);">Retention</span> 留存分析</h2>
+    <p>留存率衰减曲线 & 同期群热力图</p>
+  </div>
+  <div class="two-col" style="margin-top:0.5rem;">
+    <div>
+      <img src="06_retention_curve.png" class="chart-img" alt="留存曲线">
+    </div>
+    <div>
+      <img src="09_retention_heatmap.png" class="chart-img" alt="留存热力图">
+    </div>
+  </div>
+  <div class="insight-box" style="border-left-color:var(--aarrr-ret);margin-top:1rem;">
+    <strong>关键：</strong>次日留存 44.2% → 7日留存 50.9% → 30日留存 51.2%。各渠道留存率差异不大(34%~38%)，说明留存问题更多来自产品本身而非渠道质量。
+  </div>
+</section>
+
+<!-- ============ SLIDE 8: Revenue 收入 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2><span style="color:var(--aarrr-rev);">Revenue</span> 收入分析</h2>
+    <p>月度收入趋势 & 品类结构</p>
+  </div>
+  <div class="two-col" style="margin-top:0.5rem;">
+    <div>
+      <img src="07_monthly_revenue.png" class="chart-img" alt="收入趋势">
+    </div>
+    <div>
+      <img src="08_revenue_breakdown.png" class="chart-img" alt="收入结构">
+    </div>
+  </div>
+  <div class="kpi-grid" style="margin-top:1rem;grid-template-columns:repeat(4,1fr);">
+    <div class="kpi-card" style="padding:0.8rem;">
+      <div class="kpi-value" style="font-size:1.4rem;color:var(--aarrr-rev);">¥62</div>
+      <div class="kpi-label">ARPU</div>
+    </div>
+    <div class="kpi-card" style="padding:0.8rem;">
+      <div class="kpi-value" style="font-size:1.4rem;color:var(--aarrr-rev);">¥332</div>
+      <div class="kpi-label">ARPPU</div>
+    </div>
+    <div class="kpi-card" style="padding:0.8rem;">
+      <div class="kpi-value" style="font-size:1.4rem;color:var(--aarrr-rev);">18.7%</div>
+      <div class="kpi-label">付费转化率</div>
+    </div>
+    <div class="kpi-card" style="padding:0.8rem;">
+      <div class="kpi-value" style="font-size:1.4rem;color:var(--aarrr-rev);">¥372</div>
+      <div class="kpi-label">LTV</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9: Referral 传播 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2><span style="color:var(--aarrr-ref);">Referral</span> 传播分析</h2>
+    <p>K 因子 0.24 — 传播效应微弱</p>
+  </div>
+  <div class="two-col" style="margin-top:0.5rem;">
+    <div>
+      <img src="10_k_factor_referral.png" class="chart-img" alt="K因子分析">
+    </div>
+    <div>
+      <div style="background:var(--surface-2);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid var(--border);margin-bottom:1rem;">
+        <h3 style="margin-top:0;color:var(--aarrr-ref);">K 因子解读</h3>
+        <p style="font-size:0.9rem;">K = 平均邀请人数 × 邀请转化率</p>
+        <div style="font-size:2.5rem;font-weight:900;color:var(--aarrr-ref);text-align:center;margin:1rem 0;">0.24</div>
+        <div style="text-align:center;">
+          <span class="stage-tag" style="background:var(--aarrr-rev);color:white;">K &lt; 1 — 非病毒式增长</span>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-2);margin-top:0.8rem;text-align:center;">
+          需 K ≥ 1 才能实现自发病毒式传播
+        </p>
+      </div>
+      <div style="background:var(--surface-2);border-radius:var(--radius-lg);padding:1rem;border:1px solid var(--border);">
+        <h4 style="margin-top:0;">传播漏斗</h4>
+        <div style="font-size:0.85rem;color:var(--text-2);">
+          购买用户 933 → 分享用户 174(18.7%) → 被邀请注册 104 → 被邀请购买 52
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10: 策略建议 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2>优化策略建议</h2>
+    <p>按优先级排序的行动方案</p>
+  </div>
+  <div class="priority-matrix" style="margin-top:1rem;">
+    <div class="priority-cell" style="border-color:var(--aarrr-rev);">
+      <h4 style="color:var(--aarrr-rev);">P0 紧急且重要</h4>
+      <ul>
+        <li><strong>提升付费转化率</strong>（当前仅18.7%）</li>
+        <li>降低付费门槛，提供试用体验</li>
+        <li>优化加购→购买转化路径</li>
+        <li>对高意向用户精准推送优惠券</li>
+      </ul>
+    </div>
+    <div class="priority-cell" style="border-color:var(--aarrr-ret);">
+      <h4 style="color:var(--aarrr-ret);">P0 紧急且重要</h4>
+      <ul>
+        <li><strong>提升次日留存</strong>（当前44.2%）</li>
+        <li>优化新用户引导流程</li>
+        <li>设计签到/任务等习惯机制</li>
+        <li>建立流失预警模型</li>
+      </ul>
+    </div>
+    <div class="priority-cell" style="border-color:var(--aarrr-acq);">
+      <h4 style="color:var(--aarrr-acq);">P1 重要不紧急</h4>
+      <ul>
+        <li><strong>优化渠道组合</strong></li>
+        <li>加大口碑推荐投入（CAC¥10）</li>
+        <li>缩减低效付费广告</li>
+        <li>建立渠道质量评估体系</li>
+      </ul>
+    </div>
+    <div class="priority-cell" style="border-color:var(--aarrr-ref);">
+      <h4 style="color:var(--aarrr-ref);">P2 长期布局</h4>
+      <ul>
+        <li><strong>构建传播机制</strong></li>
+        <li>设计双向推荐奖励</li>
+        <li>优化分享路径降低摩擦</li>
+        <li>目标：K因子从0.24提升至0.5+</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11: 行动计划 ============ -->
+<section class="slide has-header">
+  <div class="slide-header">
+    <h2>30/90 天行动计划</h2>
+    <p>分阶段落地策略</p>
+  </div>
+  <div class="two-col" style="margin-top:1rem;">
+    <div style="background:var(--surface-2);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid var(--border);">
+      <h3 style="margin-top:0;color:var(--aarrr-ret);">30 天冲刺</h3>
+      <div style="font-size:0.9rem;">
+        <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);">1. 优化新用户引导流程，目标激活率提升 15%</div>
+        <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);">2. 梳理核心渠道，暂停低质量渠道投放</div>
+        <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);">3. 建立留存监控看板（次日/7日/30日）</div>
+        <div style="padding:0.5rem 0;">4. 上线首单优惠，目标付费转化率提升至 25%</div>
+      </div>
+    </div>
+    <div style="background:var(--surface-2);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid var(--border);">
+      <h3 style="margin-top:0;color:var(--aarrr-ref);">90 天战略</h3>
+      <div style="font-size:0.9rem;">
+        <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);">1. 上线推荐奖励功能，目标 K 因子 > 0.5</div>
+        <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);">2. 建立用户分群精细化运营体系</div>
+        <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);">3. 完成同期群分析，识别留存异常批次</div>
+        <div style="padding:0.5rem 0;">4. AARRR + RFM 结合分析，差异化运营</div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:1.5rem;">
+    <div style="font-size:0.85rem;color:var(--text-2);">北极星指标：活跃用户数 × ARPU — 反映增长与商业化的综合健康度</div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12: 总结 ============ -->
+<section class="slide">
+  <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;">
+    <h2 style="font-size:2.4rem;font-weight:900;margin-bottom:1.5rem;">核心发现与总结</h2>
+    <div style="max-width:800px;text-align:left;">
+      <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;">
+        <span class="step-dot" style="background:var(--aarrr-acq);flex-shrink:0;margin-top:6px;"></span>
+        <div><strong>获客</strong>：自然搜索是最大渠道(30.4%)，但口碑推荐质量最高（激活率76.5%，CAC仅¥10）</div>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;">
+        <span class="step-dot" style="background:var(--aarrr-act);flex-shrink:0;margin-top:6px;"></span>
+        <div><strong>激活</strong>：整体74.5%，付费广告用户激活率最低(72.5%)，需优化投放精准度</div>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;">
+        <span class="step-dot" style="background:var(--aarrr-ret);flex-shrink:0;margin-top:6px;"></span>
+        <div><strong>留存</strong>：次日留存44.2%，各渠道差异不大，问题在产品本身而非渠道</div>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;">
+        <span class="step-dot" style="background:var(--aarrr-rev);flex-shrink:0;margin-top:6px;"></span>
+        <div><strong>收入</strong>：付费转化率18.7%是最大瓶颈，LTV ¥372，LTV/CAC = 15.8 健康可行</div>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;">
+        <span class="step-dot" style="background:var(--aarrr-ref);flex-shrink:0;margin-top:6px;"></span>
+        <div><strong>传播</strong>：K因子0.24，传播效应微弱，需设计更强的推荐激励和社交裂变机制</div>
+      </div>
+    </div>
+    <div style="margin-top:2rem;font-size:0.9rem;color:var(--text-2);">
+      Python + Pandas + Matplotlib 自动生成 | AARRR 海盗指标模型
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script src="assets/runtime.js"></script>
+</body>
+</html>

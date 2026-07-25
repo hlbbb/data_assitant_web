@@ -1,0 +1,99 @@
+/* ===== DataPath 全局样式 ===== */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* 配色 */
+  --color-bg: #faf5f0;
+  --color-card: #ffffff;
+  --color-accent: #ff6b6b;
+  --color-sql: #a78bfa;
+  --color-python: #4ecdc4;
+  --color-yellow: #ffe66d;
+  --color-text: #2d3436;
+  --color-text-secondary: #636e72;
+  --color-border: #f0ebe5;
+
+  /* 圆角 — 减少统一度，增加手工感 */
+  --radius-card: 10px;
+  --radius-btn: 6px;
+  --radius-tag: 6px;
+  --radius-lg: 12px;
+  --radius-pill: 50px;
+
+  /* 阴影 — 减少柔光，增加边框+微阴影混搭 */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-btn: 0 2px 8px rgba(255, 107, 107, 0.2);
+
+  /* 字体 */
+  --font-main: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* 动画 — 更自然的曲线 */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* 滚动渐入动画类 */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 响应式断点辅助 */
+@media (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}

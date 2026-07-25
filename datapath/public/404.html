@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>DataPath - 数据分析学习站</title>
+  <script>
+    // Single Page Apps for GitHub Pages
+    // Redirect to index.html with the route as session storage
+    var pathSegmentsToKeep = 1; // Keep /data_assitant_web
+    var l = window.location;
+
+    // Store the path for React Router to pick up
+    sessionStorage.redirect = l.pathname;
+
+    // Redirect to base path
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/' +
+      l.search +
+      l.hash
+    );
+  </script>
+</head>
+<body>
+  <p>正在加载...</p>
+</body>
+</html>

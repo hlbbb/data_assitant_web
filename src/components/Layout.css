@@ -1,0 +1,29 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout__main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 100px 24px 48px; /* 增加顶部padding,避免被导航栏遮挡 */
+}
+
+.layout__footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .layout__main {
+    padding-top: 80px; /* 移动端也增加顶部padding */
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

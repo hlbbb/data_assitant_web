@@ -1,0 +1,6 @@
+stage,metric,users,conversion_rate
+Acquisition,注册用户,5000,100.0
+Activation,激活用户,3724,74.48
+Retention,留存用户,1831,49.17
+Revenue,付费用户,933,50.96
+Referral,分享用户,174,18.65

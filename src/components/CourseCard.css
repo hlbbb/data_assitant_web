@@ -1,0 +1,193 @@
+.course-card {
+  display: block;
+  background: var(--color-card);
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  padding: 28px 24px;
+  box-shadow: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  break-inside: avoid;
+  margin-bottom: 0;
+  position: relative;
+  cursor: pointer;
+}
+
+/* 动态渐变边框 */
+.course-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: background 0.3s ease;
+}
+
+.course-card:hover::before {
+  background: var(--gradient);
+  animation: borderRotate 3s linear infinite;
+}
+
+@keyframes borderRotate {
+  0% { background: linear-gradient(0deg, var(--color-accent), var(--color-python), var(--color-thinking), var(--color-accent)); }
+  25% { background: linear-gradient(90deg, var(--color-accent), var(--color-python), var(--color-thinking), var(--color-accent)); }
+  50% { background: linear-gradient(180deg, var(--color-accent), var(--color-python), var(--color-thinking), var(--color-accent)); }
+  75% { background: linear-gradient(270deg, var(--color-accent), var(--color-python), var(--color-thinking), var(--color-accent)); }
+  100% { background: linear-gradient(360deg, var(--color-accent), var(--color-python), var(--color-thinking), var(--color-accent)); }
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+.course-card__bar {
+  display: none;
+}
+
+.course-card__body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.course-card__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.course-card__emoji {
+  font-size: 2.2rem;
+  display: block;
+}
+
+.course-card__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.course-card__desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* Footer: tag + topic count */
+.course-card__footer {
+  padding: 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.course-card__tag--sql {
+  background: rgba(255, 107, 107, 0.1);
+  color: var(--color-accent);
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.course-card__tag--python {
+  background: rgba(78, 205, 196, 0.1);
+  color: var(--color-python);
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.course-card__tag--thinking {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-thinking);
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.course-card__count {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.course-card__count::before {
+  content: '📚';
+  font-size: 0.9rem;
+}
+
+/* 锁定状态样式 */
+.course-card--locked {
+  opacity: 0.65;
+  position: relative;
+}
+
+.course-card--locked:hover {
+  opacity: 0.85;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
+
+.course-card--locked .course-card__title {
+  color: var(--color-text-secondary);
+}
+
+.course-card--locked .course-card__desc {
+  opacity: 0.7;
+}
+
+.course-card__lock-badge {
+  background: rgba(255, 107, 107, 0.12);
+  color: var(--color-accent);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* 特色卡片 - 大尺寸 */
+.course-card--featured {
+  grid-column: span 2;
+  padding: 36px 32px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+}
+
+.course-card--featured .course-card__title {
+  font-size: 1.4rem;
+}
+
+.course-card--featured .course-card__desc {
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .course-card--featured {
+    grid-column: span 1;
+  }
+}

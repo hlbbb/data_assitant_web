@@ -1,0 +1,173 @@
+/* 进度页样式 */
+.progress-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 0 48px;
+}
+
+/* 环形进度图 */
+.progress-page__ring-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.progress-page__ring-svg {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.progress-page__ring-circle {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-page__ring-text {
+  font-size: 26px;
+  font-weight: 700;
+  fill: var(--color-text);
+  font-family: var(--font-main);
+}
+
+.progress-page__ring-sub {
+  font-size: 11px;
+  fill: var(--color-text-secondary);
+  font-family: var(--font-main);
+  font-weight: 400;
+}
+
+.progress-page__label {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.progress-page__days {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-sql);
+}
+
+/* 阶段列表区块 */
+.progress-page__section {
+  margin-bottom: 32px;
+}
+
+.progress-page__section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.progress-page__section-title--sql {
+  color: var(--color-sql);
+}
+
+.progress-page__section-title--python {
+  color: var(--color-python);
+}
+
+.progress-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 阶段条目 */
+.progress-page__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--color-card);
+  border-radius: var(--radius-tag);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  color: inherit;
+}
+
+.progress-page__item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.progress-page__item--completed {
+  border-left: 3px solid var(--color-python);
+}
+
+.progress-page__item--in_progress {
+  border-left: 3px solid var(--color-sql);
+}
+
+.progress-page__item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.progress-page__item-emoji {
+  font-size: 1.2rem;
+}
+
+.progress-page__item-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* 状态徽章 */
+.progress-page__badge {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.progress-page__badge--not_started {
+  background: #f5f0eb;
+  color: var(--color-text-secondary);
+}
+
+.progress-page__badge--in_progress {
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--color-sql);
+}
+
+.progress-page__badge--completed {
+  background: rgba(78, 205, 196, 0.15);
+  color: var(--color-python);
+}
+
+/* 重置按钮 */
+.progress-page__reset {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+.progress-page__reset-warning {
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.progress-page__reset-btn {
+  background: none;
+  border: 2px solid var(--color-accent);
+  color: var(--color-accent);
+  padding: 8px 24px;
+  border-radius: var(--radius-tag);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.progress-page__reset-btn:hover {
+  background: var(--color-accent);
+  color: #fff;
+}

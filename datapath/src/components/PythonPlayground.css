@@ -1,0 +1,190 @@
+﻿/* Python Playground 鏍峰紡 */
+.python-playground {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--font-main);
+}
+
+.python-playground--loading {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.python-playground__skeleton-editor {
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.python-playground__skeleton-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.python-playground__skeleton-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+}
+
+.python-playground__loading-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.python-playground__loading-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-python);
+  border-radius: 50%;
+  animation: loading-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.python-playground__error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.python-playground__retry-btn {
+  background: var(--color-python);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-tag);
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity var(--transition-fast);
+}
+
+.python-playground__retry-btn:hover {
+  opacity: 0.85;
+}
+
+.python-playground__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-python);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.python-playground__editor-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.python-playground__editor {
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.python-playground__run-btn {
+  background: #43e97b;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-tag);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: background var(--transition-fast);
+  align-self: flex-end;
+}
+
+.python-playground__run-btn:hover:not(:disabled) {
+  background: #38d7ae;
+}
+
+.python-playground__run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.python-playground__result {
+  border-radius: var(--radius-tag);
+  padding: 12px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.python-playground__result--success {
+  border: 2px solid var(--color-python);
+  background: rgba(78, 205, 196, 0.05);
+}
+
+.python-playground__result--error {
+  border: 2px solid var(--color-accent);
+  background: rgba(255, 107, 107, 0.05);
+}
+
+.python-playground__error-msg {
+  color: var(--color-accent);
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.python-playground__empty {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+.python-playground__output {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.python-playground__loading-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.python-playground__error-hint {
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+}
+

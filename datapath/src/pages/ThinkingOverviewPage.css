@@ -1,0 +1,110 @@
+.thinking-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 20px; /* 减少顶部间距 */
+}
+
+.thinking-overview__breadcrumb {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.thinking-overview__breadcrumb a {
+  color: #d97706;
+  font-weight: 500;
+}
+
+.thinking-overview__breadcrumb-sep {
+  margin: 0 8px;
+  color: var(--color-border);
+}
+
+.thinking-overview__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 16px;
+}
+
+.thinking-overview__progress {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-top: 3px solid #f59e0b;
+  box-shadow: none;
+}
+
+.thinking-overview__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thinking-overview__card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 16px 24px;
+  border: 1px solid var(--color-border);
+  box-shadow: none;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-fast);
+  text-decoration: none;
+  border-top: 3px solid #f59e0b;
+}
+
+.thinking-overview__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.thinking-overview__card-num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d97706;
+  min-width: 32px;
+  text-align: center;
+}
+
+.thinking-overview__card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+}
+
+.thinking-overview__card-emoji { font-size: 1.5rem; }
+
+.thinking-overview__card-info { flex: 1; }
+
+.thinking-overview__card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.thinking-overview__card-points {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.thinking-overview__card-badge {
+  font-size: 1rem;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+.thinking-overview__card-badge--completed { color: var(--color-python); }
+.thinking-overview__card-badge--in_progress { color: #f59e0b; }
+.thinking-overview__card--completed { opacity: 0.85; }
+
+@media (max-width: 768px) {
+  .thinking-overview__card { padding: 12px 16px; gap: 12px; }
+}
