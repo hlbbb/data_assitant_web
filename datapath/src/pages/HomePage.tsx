@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HeroCard from '../components/HeroCard';
 import CourseCard from '../components/CourseCard';
 import { courses } from '../data/courses';
-import { dataProjects, DIFFICULTY_LABEL, DIFFICULTY_COLOR, FREE_PROJECT_IDS } from '../data/dataProjects';
-import { isUnlocked } from '../utils/access';
+import { dataProjects, DIFFICULTY_LABEL, DIFFICULTY_COLOR } from '../data/dataProjects';
 import { SqlDatabaseIcon, PythonBasicIcon, ThinkingAnalysisIcon, PythonProjectIcon } from '../components/Icons';
 import './HomePage.css';
 
@@ -15,7 +14,6 @@ const thinkingCourse = courses.find(c => c.id === 'thinking')!;
 
 const HomePage: React.FC = () => {
   const mainRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -134,22 +132,11 @@ const HomePage: React.FC = () => {
         </h2>
         <div className="home__projects-grid">
           {dataProjects.slice(0, 4).map((project) => {
-            const isFree = FREE_PROJECT_IDS.includes(project.id);
-            const unlocked = isUnlocked() || isFree;
-
-            const handleProjectClick = (e: React.MouseEvent) => {
-              if (!isFree && !unlocked) {
-                e.preventDefault();
-                navigate('/purchase');
-              }
-            };
-
             return (
               <Link
                 key={project.id}
                 to={`/projects/${project.id}`}
                 className="home-project-card"
-                onClick={handleProjectClick}
               >
                 <div className="home-project-card__cover">
                   {project.coverImage ? (
@@ -175,7 +162,6 @@ const HomePage: React.FC = () => {
                   >
                     {DIFFICULTY_LABEL[project.difficulty]}
                   </span>
-                  {!unlocked && <span className="home-project-card__lock">🔒</span>}
                 </div>
                 <div className="home-project-card__body">
                   <h3 className="home-project-card__title">{project.title}</h3>

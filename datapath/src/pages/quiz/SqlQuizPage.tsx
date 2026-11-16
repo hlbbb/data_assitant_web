@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { sqlQuestions, CATEGORY_MAP, DIFFICULTY_MAP } from '../../data/sqlQuestions'
 import { useSmartQuiz, smartPickQuestions, getLevelColor, getLevelDef, SQL_LEVELS, SQL_BOARD_ORDER } from '../../hooks/useSmartQuiz'
-import { isQuizAccessible, FREE_QUIZ_COUNT } from '../../utils/access'
 import QuizFilter from '../../components/quiz/QuizFilter'
 import './Quiz.css'
 
@@ -15,8 +14,6 @@ const SqlQuizPage: React.FC = () => {
 
   const levelColor = profile ? getLevelColor(profile.level) : '#8BC34A'
   const levelDef = profile ? getLevelDef(profile.level, levels) : levels[0]
-
-  const unlocked = isQuizAccessible()
 
   const categoryStats = useMemo(() => {
     const stats: Record<string, number> = {}
@@ -55,10 +52,7 @@ const SqlQuizPage: React.FC = () => {
     if (mode === 'random') {
       questions = [...filteredQuestions].sort(() => Math.random() - 0.5)
     }
-    if (!unlocked) {
-      questions = questions.slice(0, FREE_QUIZ_COUNT)
-    }
-    navigate('/quiz/sql/practice', { state: { questions, trial: !unlocked } })
+    navigate('/quiz/sql/practice', { state: { questions } })
   }
 
   // 跳过测评
@@ -69,7 +63,7 @@ const SqlQuizPage: React.FC = () => {
     refreshProfile()
   }
 
-  const displayQuestions = unlocked ? filteredQuestions : filteredQuestions.slice(0, FREE_QUIZ_COUNT)
+  const displayQuestions = filteredQuestions
 
   return (
     <div className="sql-quiz">
@@ -124,11 +118,6 @@ const SqlQuizPage: React.FC = () => {
       {/* 题库浏览 */}
       <div className="quiz-section">
         <h3 className="sql-quiz__section-title">题库浏览</h3>
-        {!unlocked && (
-          <div className="quiz-trial-hint">
-            免费体验 {FREE_QUIZ_COUNT} 题，解锁后可使用全部题库与智能刷题
-          </div>
-        )}
         <QuizFilter
           selectedCategory={selectedCategory}
           selectedDifficulty={selectedDifficulty}
@@ -169,11 +158,6 @@ const SqlQuizPage: React.FC = () => {
             ))}
             {displayQuestions.length === 0 && (
               <div className="sql-quiz__empty">没有找到匹配的题目</div>
-            )}
-            {!unlocked && filteredQuestions.length > FREE_QUIZ_COUNT && (
-              <div className="quiz-trial-lock">
-                还有 {filteredQuestions.length - FREE_QUIZ_COUNT} 道题，解锁后可查看全部
-              </div>
             )}
           </div>
         )}

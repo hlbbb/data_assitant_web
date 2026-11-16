@@ -6,9 +6,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
-import { dataProjects, DIFFICULTY_LABEL, DIFFICULTY_COLOR, FREE_PROJECT_IDS } from '../../data/dataProjects'
-import { isUnlocked } from '../../utils/access'
-import PaywallOverlay from '../../components/PaywallOverlay'
+import { dataProjects, DIFFICULTY_LABEL, DIFFICULTY_COLOR } from '../../data/dataProjects'
 import './ProjectDetail.css'
 
 // Glob import all md files from data_project
@@ -18,12 +16,11 @@ const projectModules = import.meta.glob('../../../../data_project/**/*.md', {
   eager: true,
 }) as Record<string, string>
 
-// Glob import data files (csv) as raw text — only available in local dev with data_project present
+// 数据文件按需加载，避免把几十 MB CSV 打进首屏 bundle
 const dataFileModules = import.meta.glob('../../../../data_project/**/data/**/*.{csv,db}', {
   query: '?raw',
   import: 'default',
-  eager: true,
-}) as Record<string, string>
+}) as Record<string, () => Promise<string>>
 
 // Glob import python source files
 const sourceFileModules = import.meta.glob('../../../../data_project/**/*.{py}', {
@@ -57,15 +54,15 @@ function loadProjectContent(projectId: string): {
 
 /** Get all downloadable files for a project */
 function getProjectFiles(projectId: string) {
-  const dataFiles: { name: string; content: string }[] = []
+  const dataFiles: { name: string; load: () => Promise<string> }[] = []
   const sourceFiles: { name: string; content: string }[] = []
 
-  for (const [path, content] of Object.entries(dataFileModules)) {
+  for (const [path, load] of Object.entries(dataFileModules)) {
     if (path.includes(`/${projectId}/`)) {
       // Extract relative path: data_project/projectId/data/xxx.csv → data/xxx.csv
       const idx = path.indexOf(`/${projectId}/`)
       const relative = path.slice(idx + `/${projectId}/`.length)
-      dataFiles.push({ name: relative, content })
+      dataFiles.push({ name: relative, load })
     }
   }
 
@@ -90,7 +87,7 @@ async function buildAndDownloadZip(
   // Add data files
   const dataFolder = root.folder('data')!
   for (const f of dataFiles) {
-    dataFolder.file(f.name, f.content)
+    dataFolder.file(f.name, await f.load())
   }
 
   // Add source code files
@@ -133,15 +130,11 @@ const ProjectDetailPage: React.FC = () => {
     upper: string
     lower: string
   } | null>(null)
-  const [showPaywall, setShowPaywall] = useState(false)
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set([])
   )
   const [lightboxImg, setLightboxImg] = useState<string | null>(null)
   const [downloading, setDownloading] = useState(false)
-
-  // 检查项目是否解锁：已激活 或 在免费列表中
-  const unlocked = isUnlocked() || (project ? FREE_PROJECT_IDS.includes(project.id) : false)
 
   // Pre-compute file lists for the downloads section
   const projectFiles = useMemo(() => {
@@ -192,10 +185,6 @@ const ProjectDetailPage: React.FC = () => {
   if (!project || !rewrittenContent) return null
 
   const toggleSection = (key: string) => {
-    if (key === 'lower' && !unlocked) {
-      setShowPaywall(true)
-      return
-    }
     setExpandedSections(prev => {
       const next = new Set(prev)
       if (next.has(key)) next.delete(key)
@@ -205,10 +194,6 @@ const ProjectDetailPage: React.FC = () => {
   }
 
   const handleReportExpand = () => {
-    if (!unlocked) {
-      setShowPaywall(true)
-      return
-    }
     toggleSection('report')
   }
 
@@ -219,15 +204,9 @@ const ProjectDetailPage: React.FC = () => {
         src={src}
         alt={alt}
         loading="lazy"
-        onClick={() => {
-          if (!unlocked) {
-            setShowPaywall(true)
-            return
-          }
-          setLightboxImg(src || null)
-        }}
+        onClick={() => setLightboxImg(src || null)}
         style={{
-          cursor: unlocked ? 'zoom-in' : 'pointer',
+          cursor: 'zoom-in',
           maxWidth: '100%',
           height: 'auto',
           display: 'block',
@@ -313,13 +292,12 @@ const ProjectDetailPage: React.FC = () => {
           <span className="project-detail__section-header-left">
             <span className="project-detail__section-num">02</span>
             <span className="project-detail__section-title-text">分析报告</span>
-            {!unlocked && <span className="project-detail__step-lock">🔒</span>}
           </span>
           <span className={`project-detail__section-toggle ${expandedSections.has('report') ? 'project-detail__section-toggle--open' : ''}`}>
             ▼
           </span>
         </div>
-        {expandedSections.has('report') && unlocked && rewrittenContent.report && (
+        {expandedSections.has('report') && rewrittenContent.report && (
           <div className="project-detail__md project-detail__section-body">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -328,17 +306,6 @@ const ProjectDetailPage: React.FC = () => {
             >
               {rewrittenContent.report}
             </ReactMarkdown>
-          </div>
-        )}
-        {expandedSections.has('report') && !unlocked && (
-          <div className="project-detail__locked-placeholder">
-            <p>🔒 解锁后查看完整分析报告</p>
-            <button
-              className="project-detail__unlock-btn"
-              onClick={() => navigate('/purchase')}
-            >
-              立即解锁
-            </button>
           </div>
         )}
       </section>
@@ -380,13 +347,12 @@ const ProjectDetailPage: React.FC = () => {
                 <span className="project-detail__section-title-text">
                   图表剖析 · 策略推导 · 结论溯源
                 </span>
-                {!unlocked && <span className="project-detail__step-lock">🔒</span>}
               </span>
               <span className={`project-detail__section-toggle ${expandedSections.has('lower') ? 'project-detail__section-toggle--open' : ''}`}>
                 ▼
               </span>
             </button>
-            {expandedSections.has('lower') && unlocked && (
+            {expandedSections.has('lower') && (
               <div className="project-detail__md project-detail__subsection-body">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -407,7 +373,6 @@ const ProjectDetailPage: React.FC = () => {
           <span className="project-detail__section-header-left">
             <span className="project-detail__section-num">04</span>
             <span className="project-detail__section-title-text">数据与源码</span>
-            {!unlocked && <span className="project-detail__step-lock">🔒</span>}
           </span>
           <span className={`project-detail__section-toggle ${expandedSections.has('download') ? 'project-detail__section-toggle--open' : ''}`}>
             ▼
@@ -415,8 +380,7 @@ const ProjectDetailPage: React.FC = () => {
         </div>
         {expandedSections.has('download') && (
           <div className="project-detail__section-body project-detail__download">
-            {unlocked ? (
-              <>
+            <>
                 <div className="project-detail__download-desc">
                   下载项目完整资源包：数据源（CSV）、分析源码（Python）、可视化代码及项目文档。
                 </div>
@@ -462,18 +426,7 @@ const ProjectDetailPage: React.FC = () => {
                 >
                   {downloading ? '正在打包...' : '⬇ 一键打包下载全部文件'}
                 </button>
-              </>
-            ) : (
-              <div className="project-detail__locked-placeholder">
-                <p>🔒 解锁后可下载项目数据与源码</p>
-                <button
-                  className="project-detail__unlock-btn"
-                  onClick={() => navigate('/purchase')}
-                >
-                  立即解锁
-                </button>
-              </div>
-            )}
+            </>
           </div>
         )}
       </section>
@@ -502,13 +455,6 @@ const ProjectDetailPage: React.FC = () => {
         </div>
       )}
 
-      <PaywallOverlay
-        visible={showPaywall}
-        stageTitle={project.title}
-        onClose={() => setShowPaywall(false)}
-        onPurchase={() => navigate('/purchase')}
-        onActivate={() => navigate('/purchase')}
-      />
     </div>
   )
 }

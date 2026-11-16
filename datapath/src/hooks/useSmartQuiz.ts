@@ -1,7 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import type { QuizQuestion } from '../data/sqlQuestions'
-import { useAuth } from '../contexts/AuthContext'
-import { syncProfileFromCloud, saveProfileToCloud } from '../utils/supabaseData'
 
 // ========== 等级定义 ==========
 export interface LevelDef {
@@ -640,32 +638,14 @@ export function useSmartQuiz(subject: 'sql' | 'python') {
   const levels = subject === 'sql' ? SQL_LEVELS : PYTHON_LEVELS
 
   const [profile, setProfile] = useState<UserProfile | null>(() => loadProfile(subject, boardOrder))
-  const { user } = useAuth()
-  const syncedRef = useRef(false)
-  const doneQuestionsRef = useRef<number[]>([])
+  const doneQuestionsRef = useRef<number[]>(loadDoneQuestions(subject))
 
-  // Sync from cloud on mount when logged in
-  useEffect(() => {
-    if (!user || syncedRef.current) return
-    syncedRef.current = true
-    syncProfileFromCloud(user.id, subject).then(result => {
-      if (result.profile) {
-        setProfile(result.profile)
-        saveProfile(subject, result.profile)
-        doneQuestionsRef.current = result.doneQuestions
-      }
-    })
-  }, [user, subject])
-
-  // Save to localStorage + cloud on change
+  // 本地保存
   useEffect(() => {
     if (profile) {
       saveProfile(subject, profile)
-      if (user?.id) {
-        saveProfileToCloud(user.id, subject, profile, doneQuestionsRef.current)
-      }
     }
-  }, [profile, subject, user?.id])
+  }, [profile, subject])
 
   const refreshProfile = useCallback(() => {
     setProfile(loadProfile(subject, boardOrder))
@@ -691,10 +671,8 @@ export function useSmartQuiz(subject: 'sql' | 'python') {
   const getDoneQuestions = useCallback((): number[] => doneQuestionsRef.current, [])
   const setDoneQuestions = useCallback((ids: number[]) => {
     doneQuestionsRef.current = ids
-    if (user?.id && profile) {
-      saveProfileToCloud(user.id, subject, profile, ids)
-    }
-  }, [user?.id, subject, profile])
+    saveDoneQuestions(subject, ids)
+  }, [subject])
 
   return {
     profile,

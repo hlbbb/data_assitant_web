@@ -1,19 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { dataProjects, DIFFICULTY_LABEL, DIFFICULTY_COLOR, FREE_PROJECT_IDS } from '../../data/dataProjects'
-import { isUnlocked } from '../../utils/access'
+import { Link } from 'react-router-dom'
+import { dataProjects, DIFFICULTY_LABEL, DIFFICULTY_COLOR } from '../../data/dataProjects'
 import './Projects.css'
 
 const ProjectsPage: React.FC = () => {
-  const navigate = useNavigate()
-
-  const handleProjectClick = (isFree: boolean, unlocked: boolean, e: React.MouseEvent) => {
-    // 如果项目被锁定且未解锁，阻止跳转，显示付费提示
-    if (!isFree && !unlocked) {
-      e.preventDefault()
-      navigate('/purchase')
-    }
-  }
-
   return (
     <div className="projects-page">
       <div className="projects-page__header">
@@ -30,16 +19,12 @@ const ProjectsPage: React.FC = () => {
 
       <div className="projects-page__grid">
         {dataProjects.map((project, idx) => {
-          const isFree = FREE_PROJECT_IDS.includes(project.id)
-          const unlocked = isUnlocked() || isFree
-
           return (
             <Link
               key={project.id}
               to={`/projects/${project.id}`}
               className="project-card"
               style={{ '--card-delay': `${idx * 0.08}s` } as React.CSSProperties}
-              onClick={(e) => handleProjectClick(isFree, unlocked, e)}
             >
               <div className="project-card__cover">
                 {project.coverImage ? (
@@ -68,8 +53,6 @@ const ProjectsPage: React.FC = () => {
                   {DIFFICULTY_LABEL[project.difficulty]}
                 </span>
                 <span className="project-card__order">#{idx + 1}</span>
-                {!unlocked && <span className="project-card__lock">🔒</span>}
-                {unlocked && !isFree && <span className="project-card__unlocked-badge">✓</span>}
               </div>
               <div className="project-card__body">
                 <h3 className="project-card__title">

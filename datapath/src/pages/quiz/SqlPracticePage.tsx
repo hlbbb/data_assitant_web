@@ -8,15 +8,11 @@ import { formatContent } from '../../utils/formatContent'
 import OptionCard from '../../components/quiz/OptionCard'
 import QuizProgress from '../../components/quiz/QuizProgress'
 import { useWrongBook } from '../../hooks/useWrongBook'
-import { FREE_QUIZ_COUNT } from '../../utils/access'
-import { loadStore } from '../../utils/access'
-import PaywallOverlay from '../../components/PaywallOverlay'
 import './Quiz.css'
 
 interface LocationState {
   questions: QuizQuestion[]
   mode?: string
-  trial?: boolean
 }
 
 const SqlPracticePage: React.FC = () => {
@@ -24,7 +20,6 @@ const SqlPracticePage: React.FC = () => {
   const navigate = useNavigate()
   const state = location.state as LocationState | null
   const questions = state?.questions ?? []
-  const isTrial = state?.trial ?? false
 
   const { startQuiz, answerQuestion } = useQuiz()
   const { addWrongAnswer } = useWrongBook()
@@ -34,16 +29,6 @@ const SqlPracticePage: React.FC = () => {
   const [correctCount, setCorrectCount] = useState(0)
   const [finished, setFinished] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
-  const [showPaywall, setShowPaywall] = useState(false)
-  const [answeredInSession, setAnsweredInSession] = useState(0)
-
-  // 检查是否需要显示付费墙（未解锁用户答完5题后）
-  // 只有本次会话答题达到5题才触发
-  useEffect(() => {
-    if (!loadStore().unlocked && answeredInSession >= FREE_QUIZ_COUNT) {
-      setShowPaywall(true)
-    }
-  }, [answeredInSession])
 
   // 开始刷题时初始化
   useEffect(() => {
@@ -75,8 +60,6 @@ const SqlPracticePage: React.FC = () => {
     answerQuestion(label)
     updateSmartWeights('sql', currentQuestion.id, isCorrect, sqlQuestions, SQL_BOARD_ORDER)
 
-    // 记录本次会话答题数
-    setAnsweredInSession(prev => prev + 1)
   }
 
   const handleNext = () => {
@@ -130,12 +113,6 @@ const SqlPracticePage: React.FC = () => {
               返回题库
             </Link>
           </div>
-          {isTrial && (
-            <div className="practice-result__upsell">
-              <p>解锁后可使用全部题库与智能刷题功能</p>
-              <Link to="/quiz/sql" className="practice-result__upsell-btn">立即解锁</Link>
-            </div>
-          )}
         </div>
       </div>
     )
@@ -149,7 +126,6 @@ const SqlPracticePage: React.FC = () => {
         </Link>
         <span className="practice-page__title">答题中</span>
         <span className="practice-page__counter">
-          {isTrial && <span className="practice-page__trial-badge">体验</span>}
           {' '}{currentIndex + 1} / {questions.length}
         </span>
       </div>
@@ -203,13 +179,6 @@ const SqlPracticePage: React.FC = () => {
         </>
       )}
 
-      <PaywallOverlay
-        visible={showPaywall}
-        stageTitle="继续刷题"
-        onClose={() => navigate('/quiz/sql')}
-        onPurchase={() => navigate('/purchase')}
-        onActivate={() => navigate('/purchase')}
-      />
     </div>
   )
 }

@@ -11,13 +11,6 @@ const STORAGE_KEY = 'datapath_access'
 const CHARSET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 const SECRET = 7
 const CODE_PATTERN = /^DP-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{2})$/
-const FREE_SQL_IDS = ['1', '2', '3']
-const FREE_PYTHON_IDS = ['1', '2', '3', '4', '5']
-const LOCKED_SQL_IDS = ['4', '5', '6', '7', '8']
-const LOCKED_PYTHON_IDS = ['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18']
-const FREE_THINKING_IDS = ['1.1', '1.2', '1.3', '1.4', '2']
-const LOCKED_THINKING_IDS = ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-
 export function loadStore(): AccessStore {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -104,35 +97,27 @@ export async function activateCode(
   return activateCodeCloud(code, userId)
 }
 
-export function isUnlocked(): boolean { return loadStore().unlocked }
+export function isUnlocked(): boolean { return true }
 
-export function isQuizAccessible(): boolean { return loadStore().unlocked }
+export function isQuizAccessible(): boolean { return true }
 
 export const FREE_QUIZ_COUNT = 5
 
 // 检查用户是否可以继续刷题（未解锁时只能刷5题）
 export function canContinueQuiz(answeredCount: number): boolean {
-  if (loadStore().unlocked) return true
-  return answeredCount < FREE_QUIZ_COUNT
+  return answeredCount >= 0
 }
 
 // 检查是否需要显示解锁提示
-export function shouldShowQuizPaywall(answeredCount: number): boolean {
-  return !loadStore().unlocked && answeredCount >= FREE_QUIZ_COUNT
-}
-
-export function isStageAccessible(subject: Subject, stageId: string): boolean {
-  if (loadStore().unlocked) return true
-  if (subject === 'sql') return FREE_SQL_IDS.includes(stageId)
-  if (subject === 'python') return FREE_PYTHON_IDS.includes(stageId)
-  if (subject === 'thinking') return FREE_THINKING_IDS.includes(stageId)
+export function shouldShowQuizPaywall(_answeredCount: number): boolean {
   return false
 }
 
-export function getLockedStages(subject: 'sql' | 'python' | 'thinking'): string[] {
-  if (subject === 'sql') return [...LOCKED_SQL_IDS]
-  if (subject === 'python') return [...LOCKED_PYTHON_IDS]
-  if (subject === 'thinking') return [...LOCKED_THINKING_IDS]
+export function isStageAccessible(_subject: Subject, _stageId: string): boolean {
+  return true
+}
+
+export function getLockedStages(_subject: 'sql' | 'python' | 'thinking'): string[] {
   return []
 }
 

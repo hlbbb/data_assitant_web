@@ -1,7 +1,4 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import AuthModal from './AuthModal';
 import './Navbar.css';
 
 const TABS = [
@@ -15,8 +12,6 @@ const TABS = [
 
 const Navbar: React.FC = () => {
   const location = useLocation();
-  const { user, signOut } = useAuth();
-  const [showAuth, setShowAuth] = useState(false);
 
   // 判断标签是否激活：首页用精确匹配，其他用前缀匹配
   const isTabActive = (tabPath: string) => {
@@ -33,16 +28,7 @@ const Navbar: React.FC = () => {
     <nav className="navbar">
       <div className="navbar__top">
         <span className="navbar__logo">DataPath</span>
-        <div className="navbar__actions">
-          {user ? (
-            <div className="navbar__user">
-              <span className="navbar__user-email">{user.email}</span>
-              <button className="navbar__logout-btn" onClick={signOut}>退出</button>
-            </div>
-          ) : (
-            <button className="navbar__login-btn" onClick={() => setShowAuth(true)}>登录</button>
-          )}
-        </div>
+        <span className="navbar__student-mode">学员版 · 全部内容已开放</span>
       </div>
       <div className="navbar__tabs">
         {TABS.map((tab) => (
@@ -55,7 +41,6 @@ const Navbar: React.FC = () => {
           </Link>
         ))}
       </div>
-      <AuthModal visible={showAuth} onClose={() => setShowAuth(false)} />
     </nav>
   );
 };

@@ -28,6 +28,16 @@
   white-space: nowrap;
 }
 
+.navbar__student-mode {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.12);
+  white-space: nowrap;
+}
+
 .navbar__actions {
   display: flex;
   align-items: center;

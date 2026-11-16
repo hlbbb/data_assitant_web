@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { extractSetupSql, default as TutorialRenderer, type Heading } from '../components/TutorialRenderer'
 import SqlPlayground from '../components/SqlPlayground'
 import PythonPlayground from '../components/PythonPlayground'
-import PaywallOverlay from '../components/PaywallOverlay'
 import { useProgress } from '../hooks/useProgress'
 import { getStage, getCourse } from '../data/courses'
-import { isStageAccessible } from '../utils/access'
 import { getIcon } from '../utils/iconMap'
 import Skeleton from '../components/Skeleton'
 import './DetailPage.css'
@@ -129,7 +127,6 @@ function getDifficultyLevel(type: string, stageId: string): { level: string; col
 
 const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const progress = useProgress()
   const [showConfetti, setShowConfetti] = useState(false)
   const [dbKey, setDbKey] = useState(0)
@@ -139,7 +136,6 @@ const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
   const [activeId, setActiveId] = useState<string>('')
   const [mdContent, setMdContent] = useState('')
   const [loading, setLoading] = useState(true)
-  const [showPaywall, setShowPaywall] = useState(false)
   const [readingProgress, setReadingProgress] = useState(0)
   const [initialCode, setInitialCode] = useState('')
 
@@ -189,12 +185,6 @@ const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
       setLoading(false)
       return
     }
-    if (!isStageAccessible(type, id)) {
-      setShowPaywall(true)
-      setLoading(false)
-      return
-    }
-    setShowPaywall(false)
     setLoading(true)
     let modules: Record<string, string>
     let pattern: string
@@ -334,7 +324,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
       </div>
 
       {/* 本节要点卡片 */}
-      {!loading && !showPaywall && (
+      {!loading && (
         <div className="detail-page__overview">
           <div className="detail-page__overview-header">
             <h3 className="detail-page__overview-title">📚 本节要点</h3>
@@ -431,17 +421,10 @@ const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
                 codeDifficulty={difficulty.level}
               />
             )}
-            <PaywallOverlay
-              visible={showPaywall}
-              stageTitle={stage?.title ?? ''}
-              onClose={() => navigate(-1)}
-              onPurchase={() => navigate('/purchase')}
-              onActivate={() => navigate('/purchase')}
-            />
           </div>
 
           {/* 搴曢儴瀵艰埅 */}
-          {!loading && !showPaywall && (
+          {!loading && (
             <div className="detail-page__bottom-nav">
               {prevStage ? (
                 <Link to={`/${type}/${prevStage.id}`} className="detail-page__bottom-nav-btn detail-page__bottom-nav-btn--prev" onClick={() => window.scrollTo(0, 0)}>
