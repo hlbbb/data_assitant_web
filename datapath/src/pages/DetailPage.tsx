@@ -316,7 +316,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
 
       {/* 面包屑*/}
       <div className="detail-page__breadcrumb">
-        <Link to="/">棣栭〉</Link>
+        <Link to="/">首页</Link>
         <span className="detail-page__breadcrumb-sep">/</span>
         <Link to={`/${type}`}>{type === 'sql' ? 'SQL' : type === 'python' ? 'Python' : '思维模型'}</Link>
         <span className="detail-page__breadcrumb-sep">/</span>
@@ -395,7 +395,8 @@ const DetailPage: React.FC<DetailPageProps> = ({ type }) => {
                 )}
                 {nextStage && (
                   <Link to={`/${type}/${nextStage.id}`} className="detail-page__nav-btn detail-page__nav-btn--next">
-                    {nextStage.title} 鈫?                  </Link>
+                    {nextStage.title} →
+                  </Link>
                 )}
               </div>
             </div>
